@@ -191,6 +191,14 @@ function EntryCard({
             touchAction: 'pan-y',
             userSelect: dragging ? 'none' : undefined,
             WebkitUserSelect: dragging ? 'none' : undefined,
+            WebkitTapHighlightColor: 'transparent',
+            // promote to its own compositor layer only while there's
+            // something to animate — doing this unconditionally on every
+            // card wastes memory, but skipping it entirely means the
+            // browser has to allocate a new layer at the moment a drag
+            // starts, which itself is a spot where a mobile browser tends
+            // to visibly stutter.
+            willChange: swiped ? 'transform' : 'auto',
             transform: `translateX(${dx}px)`,
             transition: swipeTransition,
             animation: cardAnimation,

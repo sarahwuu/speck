@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEntries } from './hooks/useEntries.js';
 import { useSwipeHint } from './hooks/useSwipeHint.js';
-import { REVEAL } from './lib/swipe.js';
+import { REVEAL, rubberClamp } from './lib/swipe.js';
 import Splash from './screens/Splash.jsx';
 import Feed from './screens/Feed.jsx';
 import Capture from './screens/Capture.jsx';
@@ -58,6 +58,7 @@ export default function App() {
   const [dragging, setDragging] = useState(false);
   const swipeRef = useRef({ id: null, dx: 0, dragging: false });
   const dragStartX = useRef(0);
+  const dragStartDx = useRef(0); // the card's dx at the moment this gesture began — fixed for the gesture
   const dragged = useRef(false);
   // pointermove can fire far more often than the screen repaints; coalesce
   // it to at most one state commit per animation frame so dragging a card
@@ -142,21 +143,30 @@ export default function App() {
   // through to each EntryCard doesn't defeat its memoization.
   const onSwipeDown = useCallback((id, e) => {
     dragStartX.current = e.clientX;
+    dragStartDx.current = swipeRef.current.id === id ? swipeRef.current.dx : 0;
     dragged.current = false;
-    const startDx = swipeRef.current.id === id ? swipeRef.current.dx : 0;
-    commitSwipe(id, startDx, true);
+    commitSwipe(id, dragStartDx.current, true);
   }, []);
 
   const onSwipeMove = useCallback((id, e) => {
     const cur = swipeRef.current;
     if (!cur.dragging || cur.id !== id) return;
     if (Math.abs(e.clientX - dragStartX.current) > 6) dragged.current = true;
-    // base on the latest known position, whether or not this frame's
-    // rAF has flushed it into swipeRef yet — otherwise a burst of
-    // pointermoves within one frame drifts off the real finger position.
-    const liveDx = pendingMove.current && pendingMove.current.id === id ? pendingMove.current.dx : cur.dx;
-    const base = liveDx <= -REVEAL ? -REVEAL : 0;
-    const dx = Math.max(-REVEAL, Math.min(0, base + e.clientX - dragStartX.current));
+    // The raw distance is purely a function of the gesture's fixed
+    // starting point (the card's dx when the finger went down, and where
+    // the finger went down) plus how far the finger has moved since —
+    // never re-derived from wherever dx currently sits, and never
+    // hard-clamped. Re-deriving the anchor from the *current* dx (this
+    // used to key off whether it had reached -REVEAL) makes the anchor
+    // jump the instant a drag crosses that threshold — invisible while
+    // dragging one direction, but a dead zone/pop the moment you reverse
+    // mid-gesture. Hard-clamping the raw value has the same problem in
+    // miniature: it discards how far past -REVEAL the finger travelled,
+    // so reversing has to retrace that discarded distance before the
+    // card visibly moves. rubberClamp keeps the mapping smooth and
+    // reversible instead, so a reversal responds immediately.
+    const raw = dragStartDx.current + (e.clientX - dragStartX.current);
+    const dx = rubberClamp(raw);
     pendingMove.current = { id, dx };
     if (!moveRaf.current) moveRaf.current = requestAnimationFrame(flushPendingMove);
   }, []);
