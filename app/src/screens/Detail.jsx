@@ -1,5 +1,6 @@
 import IconButton from '../ds/IconButton.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
+import EntryImage from '../components/EntryImage.jsx';
 import { DETAIL_BLOB } from '../lib/blobs.js';
 import { SAFE_TOP } from '../lib/safeArea.js';
 
@@ -21,22 +22,7 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
 
       <div style={{ flex: 1, padding: '8px 24px 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)' }}>{entry.text}</p> : null}
-        <img
-          src={entry.image}
-          alt=""
-          draggable={false}
-          style={{
-            display: 'block',
-            width: '100%',
-            height: 'auto',
-            maxHeight: '45vh',
-            objectFit: 'contain',
-            background: 'var(--surface-sunken)',
-            border: '1.9px solid var(--neutral-300)',
-            borderRadius: 8,
-            boxSizing: 'border-box',
-          }}
-        />
+        <EntryImage src={entry.image} maxHeight="45vh" />
       </div>
 
       {shotMenu ? (

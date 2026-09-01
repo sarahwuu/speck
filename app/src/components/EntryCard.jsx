@@ -1,7 +1,8 @@
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useClampMeasure } from '../hooks/useClampMeasure.js';
 import { blobFor, tiltFor } from '../lib/blobs.js';
 import { REVEAL } from '../lib/swipe.js';
+import EntryImage from './EntryImage.jsx';
 
 /**
  * One feed card, text or screenshot. Carries its own swipe-to-delete
@@ -35,6 +36,8 @@ function EntryCard({
   const hasText = !!entry.text;
   const hasImage = !!entry.image;
   const { ref: measureRef, truncated } = useClampMeasure(entry.text, entry.open);
+  const cleanupDragRef = useRef(null);
+  useEffect(() => () => cleanupDragRef.current && cleanupDragRef.current(), []);
   const swiped = dx !== 0 || dragging;
   const progress = swiped ? Math.min(1, -dx / REVEAL) : 0;
   const spin = Math.round(-45 + progress * 45);
@@ -172,16 +175,35 @@ function EntryCard({
 
         <div
           onPointerDown={(e) => {
-            // Explicit capture: without it, only touch input keeps tracking
-            // a drag that wanders outside the card's own bounds — a mouse
-            // (or a fast, slightly diagonal swipe) loses the gesture the
-            // moment the pointer crosses the edge.
-            e.currentTarget.setPointerCapture(e.pointerId);
             onPointerDown(id, e);
+            // Track the rest of the gesture on window instead of relying on
+            // this element's own bubbling pointermove/pointerup — a drag
+            // that wanders outside the card's bounds (easy with a fast or
+            // diagonal swipe) would otherwise stop being delivered here at
+            // all once the pointer leaves it.
+            //
+            // setPointerCapture looks like the standard fix for that, but
+            // it has a sharp edge: capturing on pointerdown makes *every*
+            // tap's resulting click event fire on the capturing element
+            // (this div) instead of whatever was actually under the
+            // finger — silently breaking tap-to-expand-text and
+            // tap-to-open-detail on the nested <p>/<img>, not just drags.
+            const handleMove = (ev) => onPointerMove(id, ev);
+            const detach = () => {
+              window.removeEventListener('pointermove', handleMove);
+              window.removeEventListener('pointerup', handleEnd);
+              window.removeEventListener('pointercancel', handleEnd);
+              cleanupDragRef.current = null;
+            };
+            const handleEnd = () => {
+              onPointerUp(id);
+              detach();
+            };
+            window.addEventListener('pointermove', handleMove);
+            window.addEventListener('pointerup', handleEnd);
+            window.addEventListener('pointercancel', handleEnd);
+            cleanupDragRef.current = detach;
           }}
-          onPointerMove={(e) => onPointerMove(id, e)}
-          onPointerUp={() => onPointerUp(id)}
-          onPointerCancel={() => onPointerUp(id)}
           style={{
             position: 'relative',
             background: 'var(--surface-card)',
@@ -242,25 +264,7 @@ function EntryCard({
             </>
           ) : null}
           {hasImage ? (
-            <img
-              src={entry.image}
-              alt=""
-              draggable={false}
-              onClick={() => onOpenDetail(id)}
-              style={{
-                cursor: 'pointer',
-                marginTop: hasText ? 12 : 0,
-                display: 'block',
-                width: '100%',
-                height: 'auto',
-                maxHeight: 320,
-                objectFit: 'contain',
-                background: 'var(--surface-sunken)',
-                border: '1.9px solid var(--neutral-300)',
-                borderRadius: 8,
-                boxSizing: 'border-box',
-              }}
-            />
+            <EntryImage src={entry.image} maxHeight={320} onClick={() => onOpenDetail(id)} style={{ marginTop: hasText ? 12 : 0 }} />
           ) : null}
         </div>
       </div>

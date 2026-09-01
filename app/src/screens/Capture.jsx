@@ -4,6 +4,7 @@ import Button from '../ds/Button.jsx';
 import Toast from '../ds/Toast.jsx';
 import { SAFE_BOTTOM, SAFE_TOP } from '../lib/safeArea.js';
 import { fileToDataUrl } from '../lib/image.js';
+import EntryImage from '../components/EntryImage.jsx';
 
 /** The capture sheet: one open textarea, one attach-image icon, one save
  * action. Rises from the bottom as a true top layer over the still-mounted
@@ -129,22 +130,7 @@ export default function Capture({
 
           {attached ? (
             <div style={{ position: 'relative' }}>
-              <img
-                src={attached}
-                alt=""
-                draggable={false}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  height: 'auto',
-                  maxHeight: 320,
-                  objectFit: 'contain',
-                  background: 'var(--surface-sunken)',
-                  border: '1.9px solid var(--neutral-300)',
-                  borderRadius: 8,
-                  boxSizing: 'border-box',
-                }}
-              />
+              <EntryImage src={attached} maxHeight={320} />
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
                 <IconButton name="close" label="remove the attached photo" onClick={onRemoveAttachment} />
               </div>
