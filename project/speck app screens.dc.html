@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/colors.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/typography.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/radius.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/motion.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/tokens/base.css">
+<link rel="stylesheet" href="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/styles.css">
+<script src="_ds/speck-design-system-845b39a8-dc6f-4398-9220-bdd123e0d01c/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libertinus+Serif:ital,wght@0,400;1,400&display=swap">
+<style>
+@keyframes speck-bar-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes speck-field-in{from{opacity:0;transform:scaleX(0.86);transform-origin:right center}to{opacity:1;transform:scaleX(1)}}
+@keyframes speck-keys-in{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+@keyframes speck-scrim-in{from{opacity:0}to{opacity:1}}
+@keyframes speck-bar-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+@keyframes speck-field-out{from{opacity:1;transform:scaleX(1);transform-origin:right center}to{opacity:0;transform:scaleX(0.86);transform-origin:right center}}
+@keyframes speck-keys-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(100%)}}
+@keyframes speck-scrim-out{from{opacity:1}to{opacity:0}}
+@keyframes speck-speck{0%,50%,100%{transform:translateY(0) scaleY(1) scaleX(1)}7%{transform:translateY(0) scaleY(0.88) scaleX(1.09)}20%{transform:translateY(-14px) scaleY(1.07) scaleX(0.95)}36%{transform:translateY(0) scaleY(0.94) scaleX(1.05)}}
+@keyframes speck-splash-out{from{opacity:1}to{opacity:0}}
+@keyframes speck-logo-in{from{opacity:0}to{opacity:1}}
+@keyframes speck-sheet-in{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes speck-sheet-out{from{transform:translateY(0)}to{transform:translateY(100%)}}
+@keyframes speck-sheet-scrim-in{from{opacity:0}to{opacity:1}}
+@keyframes speck-sheet-scrim-out{from{opacity:1}to{opacity:0}}
+@keyframes speck-hint-label{0%{opacity:0}18%{opacity:1}72%{opacity:1}100%{opacity:0}}
+@keyframes speck-swipe-hint{0%{transform:translateX(0)}14%{transform:translateX(-28px)}30%{transform:translateX(-4px)}44%{transform:translateX(-24px)}62%{transform:translateX(0)}100%{transform:translateX(0)}}
+input[type="search"]:focus-visible{outline:none}
+input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+div:has(> input[type="search"]):focus-within{outline:3px solid var(--primary-300);outline-offset:0;border-radius:var(--radius-pill)}
+body{margin:0;background:oklch(0.94 0.01 90)}a{color:var(--primary-700)}a:hover{color:var(--ink)}textarea::placeholder{color:var(--text-placeholder)}</style>
+</helmet>
+
+<div style="padding:48px;font-family:var(--font-sans);box-sizing:border-box">
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:32px">
+<p style="margin:0;font:540 20px/1.25 var(--font-sans);color:var(--ink)">speck — connected flow</p>
+<p style="margin:0;font:500 13px/1.45 var(--font-sans);color:var(--muted)">one live prototype: tap + to capture, save to return to the feed, tap a screenshot to open its detail. empty and error shown as reference states.</p>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start">
+
+<div style="display:flex;flex-direction:column;gap:10px;flex:none">
+<p style="margin:0;font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">FIRST ENTRY — SWIPE HINT</p>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;background:var(--surface-page);border:1px solid var(--line);border-radius:44px">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink)">9:41</div>
+<div style="display:flex;align-items:center;gap:4px;padding:24px 12px 12px 24px;background:var(--surface-page);border-bottom:1px solid var(--line)">
+<span role="img" aria-label="speck" style="flex:1;margin-right:auto;display:inline-flex;align-items:center;gap:11px">
+<img src="assets/logo/speck-mark-ink.png" alt="" style="width:26px;height:26px;display:block">
+<span style="font:500 24px/1 var(--font-sans);letter-spacing:-0.01em;color:var(--ink)">speck</span>
+</span>
+</div>
+<div style="padding:24px 24px 0;display:flex;flex-direction:column;gap:24px">
+<p style="margin:0;font:italic 400 24px/1.3 'Libertinus Serif',Georgia,serif;color:var(--ink)">what caught your eye today?</p>
+<div>
+<div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+<span style="width:8px;height:8px;flex:none;border-radius:54% 46% 43% 57% / 49% 58% 42% 51%;transform:rotate(-9deg);background:var(--tint-text)"></span>
+<span style="font:500 13px/1.45 var(--font-sans);color:var(--text-meta)">just now</span>
+</div>
+<div style="background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px;animation:{{ demoAnim }}">
+<p style="margin:0;font:500 16px/1.55 var(--font-sans);color:var(--ink)">attention is the only currency that cannot be borrowed.</p>
+</div>
+<p style="margin:6px 2px 0;text-align:right;font:500 13px/1.45 var(--font-sans);color:var(--text-meta);opacity:{{ demoLabelOpacity }};animation:{{ demoLabelAnim }}">swipe to delete</p>
+</div>
+</div>
+<div style="position:absolute;left:24px;right:24px;bottom:48px;display:flex;align-items:center;justify-content:flex-end">
+<button type="button" onClick="{{ replayDemo }}" style="height:34px;min-width:44px;padding:0 20px;border:none;border-radius:var(--radius-pill);background:var(--ink);color:var(--white);font:500 16px/1 var(--font-sans);cursor:pointer">replay hint</button>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;flex:none">
+<p style="margin:0;font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">SPLASH LAB — REPLAY</p>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;background:var(--surface-page);border:1px solid var(--line);border-radius:44px">
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:{{ labOpacity }};transition:opacity 300ms ease-out">
+<div style="position:relative;width:140px;height:140px">
+<span style="position:absolute;left:{{ l1.left }};top:{{ l1.top }};width:{{ l1.size }};height:{{ l1.size }};background:var(--ink);border-radius:54% 46% 43% 57% / 49% 58% 42% 51%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1),top 620ms cubic-bezier(0.2,0.8,0.2,1),width 620ms cubic-bezier(0.2,0.8,0.2,1),height 620ms cubic-bezier(0.2,0.8,0.2,1);animation:{{ lhop1 }}"></span>
+<span style="position:absolute;left:{{ l2.left }};top:{{ l2.top }};width:{{ l2.size }};height:{{ l2.size }};background:var(--ink);border-radius:44% 56% 52% 48% / 57% 44% 56% 43%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,top 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,width 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,height 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms;animation:{{ lhop2 }}"></span>
+<span style="position:absolute;left:{{ l3.left }};top:{{ l3.top }};width:{{ l3.size }};height:{{ l3.size }};background:{{ l3.fill }};border-radius:58% 42% 47% 53% / 43% 55% 45% 57%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,top 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,width 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,height 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,background 400ms ease-out 120ms;animation:{{ lhop3 }}"></span>
+</div>
+</div>
+<div style="position:absolute;left:24px;right:24px;bottom:48px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+<span style="font:500 13px/1.45 var(--font-sans);color:var(--text-meta)">{{ labPhase }}</span>
+<div style="display:flex;align-items:center;gap:8px">
+<button type="button" onClick="{{ replayHint }}" style="height:34px;min-width:44px;padding:0 16px;border:1px solid var(--line);border-radius:var(--radius-pill);background:transparent;color:var(--ink);font:500 16px/1 var(--font-sans);cursor:pointer">swipe hint</button>
+<button type="button" onClick="{{ replaySplash }}" style="height:34px;min-width:44px;padding:0 20px;border:none;border-radius:var(--radius-pill);background:var(--ink);color:var(--white);font:500 16px/1 var(--font-sans);cursor:pointer">replay</button>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;flex:none">
+<p style="margin:0;font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">PROTOTYPE — FEED → + → CAPTURE → BACK TO FEED</p>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;background:var(--surface-page);border:1px solid var(--line);border-radius:44px">
+<sc-if value="{{ atFeed }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink);flex:none">9:41</div>
+<sc-if value="{{ selecting }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:8px;padding:24px 24px 12px;flex:none;background:var(--surface-page);border-bottom:1px solid var(--line)">
+<button type="button" onClick="{{ exitSelect }}" style="height:44px;padding:0;border:none;background:transparent;font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">cancel</button>
+<span style="flex:1;text-align:center;font:500 16px/1 var(--font-sans);color:var(--muted)">{{ selectedLabel }}</span>
+<button type="button" onClick="{{ requestDeleteSelected }}" disabled="{{ noneSelected }}" style="height:44px;padding:0;border:none;background:transparent;font:500 16px/1 var(--font-sans);color:{{ deleteColor }};cursor:pointer">delete</button>
+</div>
+</sc-if>
+<sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:4px;padding:24px 12px 12px 24px;flex:none;background:var(--surface-page);border-bottom:1px solid {{ barRule }};transition:border-color var(--motion-transition)">
+<span role="img" aria-label="speck" style="flex:1;margin-right:auto;display:inline-flex;align-items:center;gap:11px">
+<img src="assets/logo/speck-mark-ink.png" alt="" style="width:26px;height:26px;display:block">
+<span style="font:500 24px/1 var(--font-sans);letter-spacing:-0.01em;color:var(--ink)">speck</span>
+</span>
+<div style="display:flex;align-items:center;gap:4px;flex:none;margin-left:auto">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="search" label="search entries" on-click="{{ openSearch }}" hint-size="44px,44px"></x-import>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="more" label="more options" on-click="{{ toggleAppMenu }}" hint-size="44px,44px"></x-import>
+</div>
+</div>
+</sc-if>
+<div onScroll="{{ onFeedScroll }}" ref="{{ feedRef }}" style="flex:1;overflow-y:auto;padding:24px 24px 120px;display:flex;flex-direction:column;gap:24px">
+<p style="margin:0;font:italic 400 24px/1.3 'Libertinus Serif',Georgia,serif;color:var(--ink)">what caught your eye today?</p>
+
+
+<sc-for list="{{ feedEntries }}" as="entry" hint-placeholder-count="3">
+<div ref="{{ entry.cardRef }}" style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:7px">
+<span style="width:8px;height:8px;flex:none;border-radius:{{ entry.blob }};transform:rotate({{ entry.blobTilt }});background:{{ entry.tint }}"></span>
+<span style="flex:1;font:500 13px/1.45 var(--font-sans);color:var(--text-meta)">{{ entry.timestamp }}</span>
+
+<sc-if value="{{ selecting }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ entry.toggleSelect }}" aria-label="select this entry" aria-pressed="{{ entry.selected }}" style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:8px;background:transparent;cursor:pointer">
+<span style="width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1.9px solid {{ entry.checkBorder }};background:{{ entry.checkFill }}">
+<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--white)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:{{ entry.checkMark }}"><path d="M5 13l4.5 4.5L19 7"></path></svg>
+</span>
+</button>
+</sc-if>
+</div>
+<div style="position:relative">
+<div style="position:absolute;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:flex-end;opacity:{{ entry.revealOpacity }};pointer-events:{{ entry.revealEvents }};transition:opacity var(--motion-transition)">
+<button type="button" onClick="{{ entry.requestDelete }}" aria-label="delete this entry" style="position:relative;width:44px;height:44px;margin-right:20px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;background:transparent;cursor:pointer">
+<span style="position:absolute;inset:0;border-radius:50%;background:var(--secondary-700)"></span>
+<span style="position:relative;display:flex;transform:rotate({{ entry.spin }});transition:{{ entry.swipeTransition }}">
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--white)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg>
+</span>
+</button>
+</div>
+<div onPointerDown="{{ entry.onDown }}" onPointerMove="{{ entry.onMove }}" onPointerUp="{{ entry.onUp }}" onPointerCancel="{{ entry.onUp }}" style="position:relative;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px;touch-action:pan-y;transform:translateX({{ entry.dx }});transition:{{ entry.swipeTransition }};animation:{{ entry.hintAnim }}">
+<sc-if value="{{ entry.reading }}" hint-placeholder-val="{{ true }}">
+<p onClick="{{ entry.toggle }}" style="margin:0;font:500 16px/1.55 var(--font-sans);color:var(--ink);cursor:text;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:{{ entry.clamp }}" ref="{{ entry.measure }}">{{ entry.text }}</p>
+<sc-if value="{{ entry.showToggle }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ entry.toggle }}" style="margin-top:10px;padding:0;border:none;background:transparent;font:540 13px/1.45 var(--font-sans);color:var(--primary-700);cursor:pointer">{{ entry.toggleLabel }}</button>
+</sc-if>
+</sc-if>
+<sc-if value="{{ entry.hasImage }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ entry.openDetail }}" style="cursor:pointer;margin-top:{{ entry.imageGap }};height:176px;display:flex;align-items:center;justify-content:center;background:var(--surface-sunken);border:1.9px solid var(--neutral-300);border-radius:8px;font:500 13px/1.45 var(--font-sans);color:var(--muted)">screenshot placeholder</div>
+</sc-if>
+</div>
+</div>
+<sc-if value="{{ entry.showHintLabel }}" hint-placeholder-val="{{ false }}">
+<p style="margin:6px 2px 0;text-align:right;font:500 13px/1.45 var(--font-sans);color:var(--text-meta);animation:speck-hint-label 3200ms ease-out both;pointer-events:none">swipe to delete</p>
+</sc-if>
+</div>
+</sc-for>
+
+</div>
+</div>
+<sc-if value="{{ appMenu }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeAppMenu }}" style="position:absolute;inset:0;z-index:2"></div>
+<div style="position:absolute;z-index:3;top:96px;right:16px;width:200px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column">
+<button type="button" onClick="{{ enterSelect }}" style="height:44px;padding:0 16px;text-align:left;border:none;background:transparent;font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">select</button>
+</div>
+</sc-if>
+<sc-if value="{{ confirmFeed }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ cancelDelete }}" style="position:absolute;inset:0;background:var(--ink-16)"></div>
+<div role="alertdialog" style="position:absolute;z-index:4;left:24px;right:24px;bottom:48px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:16px">
+<div>
+<p style="margin:0;font:500 16px/1.35 var(--font-sans);color:var(--ink)">{{ confirmTitle }}</p>
+<p style="margin:8px 0 0;font:500 16px/1.45 var(--font-sans);color:var(--muted)">this can’t be undone.</p>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:8px">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" level="tertiary" on-click="{{ cancelDelete }}" hint-size="auto,34px">cancel</x-import>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" level="destructive" on-click="{{ confirmDelete }}" hint-size="auto,34px">delete</x-import>
+</div>
+</div>
+</sc-if>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.QuickCaptureButton" fixed="{{ false }}" on-click="{{ openCapture }}" mark-src="assets/speck-mark-ink.png" label="new entry" style="position:absolute;right:24px;bottom:48px" hint-size="56px,56px"></x-import>
+</sc-if>
+<sc-if value="{{ atCapture }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:6;background:var(--ink-16);animation:{{ animSheetScrim }}"></div>
+<div style="position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;background:var(--surface-page);border-radius:44px;overflow:hidden;will-change:transform;animation:{{ animSheet }}">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink);flex:none">9:41</div>
+<div style="height:56px;display:flex;align-items:center;padding:0 12px;flex:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="close" label="close capture" on-click="{{ closeCapture }}" hint-size="44px,44px"></x-import>
+</div>
+<div style="flex:1;padding:8px 24px 0;display:flex;flex-direction:column;gap:16px">
+<div style="position:relative">
+<textarea value="{{ draft }}" onChange="{{ onDraftEvent }}" rows="8" placeholder="type, paste, or add a screenshot…" style="width:100%;box-sizing:border-box;display:block;resize:none;border:none;outline:none;padding:0;background:transparent;font:500 16px/1.55 var(--font-sans);color:var(--ink)"></textarea>
+<button type="button" onClick="{{ attachImage }}" aria-label="add an image" style="position:absolute;right:-10px;bottom:0;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;background:transparent;color:var(--ink);cursor:pointer;padding:0">
+<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"></rect><circle cx="8.8" cy="9.6" r="1.3" fill="currentColor" stroke="none"></circle><path d="M4.5 17.5l4.8-4.8 3.4 3.4 2.6-2.6 4.2 4.2"></path></svg>
+</button>
+</div>
+<sc-if value="{{ attached }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative">
+<div style="height:176px;display:flex;align-items:center;justify-content:center;background:var(--surface-sunken);border:1.9px solid var(--neutral-300);border-radius:8px;font:500 13px/1.45 var(--font-sans);color:var(--muted)">screenshot placeholder</div>
+<div style="position:absolute;top:0;right:0">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="close" label="remove the attached screenshot" on-click="{{ removeAttachment }}" hint-size="44px,44px"></x-import>
+</div>
+</div>
+</sc-if>
+</div>
+<div style="padding:0 24px 48px;display:flex;justify-content:flex-end;flex:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" on-click="{{ onSave }}" loading="{{ saving }}" loading-label="saving…" hint-size="auto,34px">save</x-import>
+</div>
+</div>
+<sc-if value="{{ pickerMenu }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePicker }}" style="position:absolute;inset:0;background:var(--ink-16)"></div>
+<div style="position:absolute;left:24px;right:24px;bottom:48px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column">
+<button type="button" onClick="{{ openLibrary }}" style="height:52px;padding:0 16px;text-align:left;border:none;border-bottom:1px solid var(--line);background:transparent;font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">browse photos</button>
+<button type="button" onClick="{{ openLibrary }}" style="height:52px;padding:0 16px;text-align:left;border:none;border-bottom:1px solid var(--line);background:transparent;font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">take a photo</button>
+<button type="button" onClick="{{ closePicker }}" style="height:52px;padding:0 16px;text-align:left;border:none;background:transparent;font:500 16px/1 var(--font-sans);color:var(--muted);cursor:pointer">cancel</button>
+</div>
+</sc-if>
+<sc-if value="{{ pickerLibrary }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePicker }}" style="position:absolute;inset:0;background:var(--ink-16)"></div>
+<div style="position:absolute;left:24px;right:24px;bottom:48px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<span style="font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">RECENT PHOTOS</span>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="close" label="close the photo picker" on-click="{{ closePicker }}" hint-size="44px,44px"></x-import>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<sc-for list="{{ photos }}" as="photo" hint-placeholder-count="9">
+<button type="button" onClick="{{ selectPhoto }}" aria-label="attach this photo" style="aspect-ratio:1;padding:0;border:1.9px solid var(--neutral-300);border-radius:8px;background:var(--surface-sunken);cursor:pointer"></button>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:flex-end">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" level="tertiary" size="small" on-click="{{ closePicker }}" hint-size="auto,30px">cancel</x-import>
+</div>
+</div>
+</sc-if>
+<div style="position:absolute;left:0;right:0;bottom:116px;display:flex;justify-content:center;pointer-events:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Toast" visible="{{ toast }}" hint-size="auto,37px">saved</x-import>
+</div>
+</sc-if>
+<sc-if value="{{ atDetail }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink);flex:none">9:41</div>
+<div style="height:56px;display:flex;align-items:center;gap:4px;padding:0 12px;flex:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="back" label="back to feed" on-click="{{ backToFeed }}" hint-size="44px,44px"></x-import>
+<div style="flex:1;text-align:center;display:flex;align-items:center;justify-content:center;gap:7px">
+<span style="width:8px;height:8px;flex:none;border-radius:58% 42% 47% 53% / 43% 55% 45% 57%;transform:rotate(12deg);background:var(--tint-screenshot)"></span>
+<span style="font:500 13px/1.45 var(--font-sans);color:var(--muted)">{{ detailTimestamp }}</span>
+</div>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="more" label="entry options" on-click="{{ toggleShotMenu }}" hint-size="44px,44px"></x-import>
+</div>
+<div style="flex:1;padding:8px 24px 48px;display:flex;flex-direction:column;gap:16px">
+<sc-if value="{{ detailHasText }}" hint-placeholder-val="{{ true }}">
+<p style="margin:0;font:500 16px/1.55 var(--font-sans);color:var(--ink)">{{ detailText }}</p>
+</sc-if>
+<div style="height:480px;display:flex;align-items:center;justify-content:center;background:var(--surface-sunken);border:1.9px solid var(--neutral-300);border-radius:8px;font:500 13px/1.45 var(--font-sans);color:var(--muted)">screenshot placeholder</div>
+</div>
+</div>
+<sc-if value="{{ shotMenu }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeMenus }}" style="position:absolute;inset:0;background:var(--ink-16)"></div>
+<div style="position:absolute;top:96px;right:16px;width:180px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column">
+<button type="button" onClick="{{ closeMenus }}" style="height:44px;padding:0 16px;text-align:left;border:none;border-bottom:1px solid var(--line);background:transparent;font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">edit</button>
+<button type="button" onClick="{{ requestDeleteShot }}" style="height:44px;padding:0 16px;text-align:left;border:none;background:transparent;font:500 16px/1 var(--font-sans);color:var(--secondary-700);cursor:pointer">delete</button>
+</div>
+</sc-if>
+<sc-if value="{{ confirmShot }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ cancelDelete }}" style="position:absolute;inset:0;background:var(--ink-16)"></div>
+<div role="alertdialog" style="position:absolute;z-index:4;left:24px;right:24px;bottom:48px;background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:16px">
+<div>
+<p style="margin:0;font:500 16px/1.35 var(--font-sans);color:var(--ink)">delete this entry?</p>
+<p style="margin:8px 0 0;font:500 16px/1.45 var(--font-sans);color:var(--muted)">this can’t be undone.</p>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:8px">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" level="tertiary" on-click="{{ cancelDelete }}" hint-size="auto,34px">cancel</x-import>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" level="destructive" on-click="{{ confirmDelete }}" hint-size="auto,34px">delete</x-import>
+</div>
+</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{ atSearch }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ backToFeed }}" style="position:absolute;inset:0;background:var(--ink-16);animation:{{ animScrim }}"></div>
+<div style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;pointer-events:none">
+<div style="pointer-events:auto;background:var(--surface-page);border-bottom:1px solid var(--line);padding:68px 24px 12px 12px;display:flex;align-items:center;gap:4px;flex:none;animation:{{ animBar }}">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="back" label="close search" on-click="{{ backToFeed }}" hint-size="44px,44px"></x-import>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.SearchField" value="{{ query }}" on-change="{{ onQuery }}" auto-focus="{{ true }}" style="flex:1;animation:{{ animField }}" hint-size="100%,41px"></x-import>
+</div>
+<div style="pointer-events:auto;flex:none;max-height:300px;overflow-y:auto;background:var(--surface-page);border-bottom:1px solid var(--line);padding:{{ resultsPad }};display:flex;flex-direction:column;gap:16px">
+<sc-for list="{{ results }}" as="hit" hint-placeholder-count="0">
+<div onClick="{{ hit.jumpToEntry }}" style="cursor:pointer;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:7px">
+<span style="width:8px;height:8px;flex:none;border-radius:44% 56% 52% 48% / 57% 44% 56% 43%;transform:rotate(-8deg);background:{{ hit.tint }}"></span>
+<span style="font:500 13px/1.45 var(--font-sans);color:var(--text-meta)">{{ hit.timestamp }}</span>
+</div>
+<div style="background:var(--surface-card);border:1px solid var(--line);border-radius:8px;padding:16px">
+<sc-if value="{{ hit.hasText }}" hint-placeholder-val="{{ true }}">
+<p style="margin:0;font:500 16px/1.55 var(--font-sans);color:var(--ink);display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:3">{{ hit.text }}</p>
+</sc-if>
+<sc-if value="{{ hit.hasImage }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ hit.openDetail }}" style="cursor:pointer;margin-top:{{ hit.imageGap }};height:176px;display:flex;align-items:center;justify-content:center;background:var(--surface-sunken);border:1.9px solid var(--neutral-300);border-radius:8px;font:500 13px/1.45 var(--font-sans);color:var(--muted)">screenshot placeholder</div>
+</sc-if>
+</div>
+<sc-if value="{{ entry.showHintLabel }}" hint-placeholder-val="{{ false }}">
+<p style="margin:6px 2px 0;text-align:right;font:500 13px/1.45 var(--font-sans);color:var(--text-meta);animation:speck-hint-label 3200ms ease-out both;pointer-events:none">swipe to delete</p>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.EmptyState" title="{{ noResultsTitle }}" hint-size="100%,80px">try a shorter word, or a word the entry actually used.</x-import>
+</sc-if>
+</div>
+<div onClick="{{ backToFeed }}" style="flex:1;pointer-events:auto"></div>
+<div style="animation:{{ animKeys }};pointer-events:auto;flex:none;background:var(--neutral-200);padding:8px 3px 28px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;gap:6px"><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">q</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">w</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">e</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">r</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">t</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">y</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">u</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">i</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">o</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">p</button></div>
+<div style="display:flex;gap:6px;padding:0 16px"><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">a</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">s</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">d</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">f</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">g</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">h</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">j</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">k</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">l</button></div>
+<div style="display:flex;gap:6px">
+<button type="button" onClick="{{ noop }}" style="flex:1.5;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--neutral-300);font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">⇧</button>
+<button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">z</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">x</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">c</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">v</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">b</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">n</button><button type="button" onClick="{{ typeKey }}" style="flex:1;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 20px/1 var(--font-sans);color:var(--ink);cursor:pointer">m</button>
+<button type="button" onClick="{{ backspaceKey }}" style="flex:1.5;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--neutral-300);font:500 16px/1 var(--font-sans);color:var(--ink);cursor:pointer">⌫</button>
+</div>
+<div style="display:flex;gap:6px">
+<button type="button" onClick="{{ noop }}" style="flex:1.5;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--neutral-300);font:500 14px/1 var(--font-sans);color:var(--ink);cursor:pointer">123</button>
+<button type="button" onClick="{{ spaceKey }}" style="flex:5;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--white);font:500 14px/1 var(--font-sans);color:var(--ink);cursor:pointer">space</button>
+<button type="button" onClick="{{ noop }}" style="flex:2;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:none;border-radius:6px;background:var(--ink);font:540 14px/1 var(--font-sans);color:var(--white);cursor:pointer">search</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ atSplash }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;z-index:5;background:var(--surface-page);display:flex;align-items:center;justify-content:center;animation:{{ animSplash }}">
+<div style="position:relative;width:140px;height:140px">
+<span style="position:absolute;left:{{ s1.left }};top:{{ s1.top }};width:{{ s1.size }};height:{{ s1.size }};background:var(--ink);border-radius:54% 46% 43% 57% / 49% 58% 42% 51%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1),top 620ms cubic-bezier(0.2,0.8,0.2,1),width 620ms cubic-bezier(0.2,0.8,0.2,1),height 620ms cubic-bezier(0.2,0.8,0.2,1);animation:{{ hop1 }}"></span>
+<span style="position:absolute;left:{{ s2.left }};top:{{ s2.top }};width:{{ s2.size }};height:{{ s2.size }};background:var(--ink);border-radius:44% 56% 52% 48% / 57% 44% 56% 43%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,top 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,width 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms,height 620ms cubic-bezier(0.2,0.8,0.2,1) 60ms;animation:{{ hop2 }}"></span>
+<span style="position:absolute;left:{{ s3.left }};top:{{ s3.top }};width:{{ s3.size }};height:{{ s3.size }};background:{{ s3.fill }};border-radius:58% 42% 47% 53% / 43% 55% 45% 57%;transform-origin:center bottom;transition:left 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,top 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,width 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,height 620ms cubic-bezier(0.2,0.8,0.2,1) 120ms,background 400ms ease-out 120ms;animation:{{ hop3 }}"></span>
+</div>
+</div>
+</sc-if>
+<div style="position:absolute;left:50%;bottom:9px;transform:translateX(-50%);width:134px;height:5px;border-radius:999px;background:var(--ink-24)"></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;flex:none">
+<p style="margin:0;font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">EMPTY — ZERO ENTRIES</p>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;background:var(--surface-page);border:1px solid var(--line);border-radius:44px">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink);flex:none">9:41</div>
+<div style="display:flex;align-items:center;gap:4px;padding:24px 12px 8px 24px;flex:none">
+<span role="img" aria-label="speck" style="flex:1;margin-right:auto;display:inline-flex;align-items:center;gap:11px">
+<img src="assets/logo/speck-mark-ink.png" alt="" style="width:26px;height:26px;display:block">
+<span style="font:500 24px/1 var(--font-sans);letter-spacing:-0.01em;color:var(--ink)">speck</span>
+</span>
+<div style="display:flex;align-items:center;gap:4px;flex:none;margin-left:auto">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="search" label="search entries" disabled="{{ true }}" hint-size="44px,44px"></x-import>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="more" label="more options" hint-size="44px,44px"></x-import>
+</div>
+</div>
+<div style="padding:0 24px 16px;flex:none">
+<p style="margin:0;font:italic 400 24px/1.3 'Libertinus Serif',Georgia,serif;color:var(--ink)">what caught your eye today?</p>
+</div>
+<div style="flex:1;padding:48px 24px 0">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.EmptyState" title="nothing here yet." hint-size="100%,80px">tap + to save the next line that catches you.</x-import>
+</div>
+</div>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.QuickCaptureButton" fixed="{{ false }}" mark-src="assets/speck-mark-ink.png" label="new entry" style="position:absolute;right:24px;bottom:48px" hint-size="56px,56px"></x-import>
+<div style="position:absolute;left:50%;bottom:9px;transform:translateX(-50%);width:134px;height:5px;border-radius:999px;background:var(--ink-24)"></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;flex:none">
+<p style="margin:0;font:540 11px/1.2 var(--font-sans);letter-spacing:0.02em;text-transform:uppercase;color:var(--muted)">ERROR — SAVE FAILED, DRAFT KEPT</p>
+<div style="width:390px;height:844px;position:relative;overflow:hidden;background:var(--surface-page);border:1px solid var(--line);border-radius:44px">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column">
+<div style="height:44px;display:flex;align-items:center;padding:0 32px;font:540 13px/1 var(--font-sans);color:var(--ink);flex:none">9:41</div>
+<div style="height:56px;display:flex;align-items:center;padding:0 12px;flex:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.IconButton" name="close" label="close capture" on-click="{{ closeCapture }}" hint-size="44px,44px"></x-import>
+</div>
+<div style="flex:1;padding:8px 24px 0;display:flex;flex-direction:column;gap:16px">
+<textarea value="{{ errDraft }}" onChange="{{ onErrDraftEvent }}" rows="8" placeholder="type, paste, or add a screenshot…" style="width:100%;box-sizing:border-box;display:block;resize:none;border:none;outline:none;padding:0;background:transparent;font:500 16px/1.55 var(--font-sans);color:var(--ink)"></textarea>
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Banner" tone="{{ errTone }}" lead="{{ errLead }}" action-label="{{ errAction }}" on-action="{{ onRetry }}" hint-size="100%,64px">{{ errBody }}</x-import>
+</div>
+<div style="padding:0 24px 48px;display:flex;justify-content:flex-end;flex:none">
+<x-import component-from-global-scope="SpeckDesignSystem_845b39.Button" on-click="{{ onRetry }}" loading="{{ errSaving }}" loading-label="saving…" hint-size="auto,34px">save</x-import>
+</div>
+</div>
+<div style="position:absolute;left:50%;bottom:9px;transform:translateX(-50%);width:134px;height:5px;border-radius:999px;background:var(--ink-24)"></div>
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+const REVEAL = 116;
+const BLOBS = [
+  '54% 46% 43% 57% / 49% 58% 42% 51%',
+  '44% 56% 52% 48% / 57% 44% 56% 43%',
+  '58% 42% 47% 53% / 43% 55% 45% 57%'
+];
+const SEED = [
+  { id: 1, timestamp: 'aug 25, 4:12pm', text: 'the mind is not a vessel to be filled but a fire to be kindled, and what kindles it is rarely the thing you set out to read — it is the sentence you did not expect, arriving mid-scroll, three paragraphs into something you were only half attending to.' },
+  { id: 2, timestamp: 'aug 25, 11:04am', text: 'the paragraph about attention as a currency', image: true },
+  { id: 3, timestamp: 'aug 24, 9:20pm', image: true }
+];
+
+class Component extends DCLogic {
+  state = { splash: 'in', lab: 'in', appMenu: false, selecting: false, selected: {}, menuId: null, route: 'feed', searching: false, detailId: null, query: '', entries: SEED, editingId: null, editDraft: '', swipeId: null, swipeDx: 0, dragging: false, confirm: null, draft: '', attached: false, picker: null, saving: false, toast: false, shotMenu: false, errDraft: 'attention is the only currency that cannot be borrowed', errSaving: false, errFixed: false };
+
+  componentDidMount() {
+    this.playLab();
+    this._hintTimer = setTimeout(() => this.maybeHint(), 2200);
+    this._demo = setTimeout(() => this.setState({ demo: true }), 800);
+    this._boot2 = setTimeout(() => {
+      this.setState({ splash: 'out' });
+      this._boot3 = setTimeout(() => this.setState({ splash: 'done' }), 300);
+    }, 1500);
+    this.measureAll();
+    requestAnimationFrame(() => requestAnimationFrame(() => this.measureAll()));
+    [120, 400, 1000].forEach(ms => setTimeout(() => this.measureAll(), ms));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.measureAll());
+  }
+
+  componentDidUpdate() {
+    this.measureAll();
+    cancelAnimationFrame(this._raf);
+    this._raf = requestAnimationFrame(() => this.measureAll());
+  }
+
+  measureAll() {
+    const els = this._els || {};
+    const changes = {};
+    let any = false;
+    (this.state.entries || []).forEach(e => {
+      const el = els[e.id];
+      if (!el || e.open) return;
+      const lh = parseFloat(getComputedStyle(el).lineHeight) || 25;
+      const over = el.scrollHeight > Math.round(lh * 3) + 1;
+      if (over !== !!e.truncated) { changes[e.id] = over; any = true; }
+    });
+    if (any) this.setState(s => ({ entries: s.entries.map(x => changes[x.id] === undefined ? x : { ...x, truncated: changes[x.id] }) }));
+  }
+
+  componentWillUnmount() { clearTimeout(this._s); clearTimeout(this._toast); clearTimeout(this._sc); clearTimeout(this._boot); clearTimeout(this._boot2); clearTimeout(this._boot3); clearTimeout(this._lab1); clearTimeout(this._lab2); clearTimeout(this._hintTimer); clearTimeout(this._hintClear); clearTimeout(this._cap); clearTimeout(this._demo); }
+
+  componentDidUpdate() {
+    if (this.state.captureClosing && this.state.route === 'feed' && !this._cap) {
+      this._cap = setTimeout(() => { this._cap = null; this.setState({ captureClosing: false }); }, 300);
+    }
+    if (this.state.hintPending && !this._hintDone) {
+      this.setState({ hintPending: false });
+      clearTimeout(this._hintTimer);
+      this._hintTimer = setTimeout(() => this.maybeHint(), 600);
+    } else if (this.state.hintPending) {
+      this.setState({ hintPending: false });
+    }
+  }
+
+  maybeHint() {
+    if (this._hintDone) return;
+    try { if (localStorage.getItem('speck.swipeHintShown') === '1') { this._hintDone = true; return; } } catch (err) {}
+    const top = this.state.entries[0];
+    if (!top || this.state.route !== 'feed') return;
+    this._hintDone = true;
+    try { localStorage.setItem('speck.swipeHintShown', '1'); } catch (err) {}
+    this.setState({ hint: top.id });
+    this._hintClear = setTimeout(() => this.setState({ hint: null }), 3300);
+  }
+
+  speckPos(i, phase) {
+    const ph = phase || this.state.splash;
+    const line = [{ l: 37, t: 56, s: 14 }, { l: 63, t: 56, s: 14 }, { l: 89, t: 56, s: 14 }];
+    const icon = [{ l: 55, t: 34, s: 10 }, { l: 33, t: 75, s: 32 }, { l: 92, t: 61, s: 18 }];
+    const loading = ph !== 'never';
+    const p = loading ? line[i] : icon[i];
+    return {
+      left: p.l + 'px', top: p.t + 'px', size: p.s + 'px',
+      fill: loading ? 'var(--ink)' : 'var(--primary-500)'
+    };
+  }
+
+  speckHop(i, phase) {
+    const ph = phase || this.state.splash;
+    return `speck-speck 1200ms cubic-bezier(0.3,0.1,0.4,1) infinite ${i * 260}ms`;
+  }
+
+  playLab() {
+    clearTimeout(this._lab1); clearTimeout(this._lab2);
+    this.setState({ lab: 'in' });
+    this._lab2 = setTimeout(() => this.setState({ lab: 'out' }), 1500);
+  }
+
+  selectedIds() {
+    const sel = this.state.selected || {};
+    return Object.keys(sel).filter(k => sel[k]).map(Number);
+  }
+
+  searchResults() {
+    const q = (this.state.query || '').trim().toLowerCase();
+    if (!q) return [];
+    return (this.state.entries || []).filter(e =>
+      (e.text || '').toLowerCase().includes(q) || (e.timestamp || '').toLowerCase().includes(q));
+  }
+
+  stamp() {
+    const d = new Date();
+    const m = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'][d.getMonth()];
+    let h = d.getHours();
+    const suf = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    return m + ' ' + d.getDate() + ', ' + h + ':' + String(d.getMinutes()).padStart(2, '0') + suf;
+  }
+
+  renderVals() {
+    const { draft, attached, saving, toast, shotMenu, errDraft, errSaving, errFixed } = this.state;
+
+    const detailEntry = (this.state.entries || []).find(x => x.id === this.state.detailId) || {};
+
+    return {
+      logoSize: 26,
+      atSplash: this.state.splash !== 'done',
+      animSplash: this.state.splash === 'out' ? 'speck-splash-out 300ms ease-out both' : 'none',
+      l1: this.speckPos(0, this.state.lab), l2: this.speckPos(1, this.state.lab), l3: this.speckPos(2, this.state.lab),
+      lhop1: this.speckHop(0, this.state.lab), lhop2: this.speckHop(1, this.state.lab), lhop3: this.speckHop(2, this.state.lab),
+      labOpacity: this.state.lab === 'out' ? 0 : 1,
+      labPhase: this.state.lab === 'out' ? 'faded out' : 'loading',
+      demoAnim: this.state.demo ? 'speck-swipe-hint 2300ms cubic-bezier(0.2,0.8,0.2,1) both' : 'none',
+      demoLabelAnim: this.state.demo ? 'speck-hint-label 3200ms ease-out both' : 'none',
+      demoLabelOpacity: this.state.demo ? 1 : 0,
+      replayDemo: () => {
+        clearTimeout(this._demo);
+        this.setState({ demo: false }, () => {
+          this._demo = setTimeout(() => this.setState({ demo: true }), 60);
+        });
+      },
+      replaySplash: () => this.playLab(),
+      replayHint: () => {
+        try { localStorage.removeItem('speck.swipeHintShown'); } catch (err) {}
+        this._hintDone = false;
+        clearTimeout(this._hintClear);
+        this.setState({ hint: null }, () => this.maybeHint());
+      },
+      s1: this.speckPos(0), s2: this.speckPos(1), s3: this.speckPos(2),
+      hop1: this.speckHop(0), hop2: this.speckHop(1), hop3: this.speckHop(2),
+      barRule: this.state.scrolled ? 'var(--line)' : 'transparent',
+      onFeedScroll: (ev) => {
+        const on = ev.currentTarget.scrollTop > 4;
+        if (on !== !!this.state.scrolled) this.setState({ scrolled: on });
+      },
+      atSearch: this.state.searching || this.state.searchClosing,
+      animBar: this.state.searchClosing ? 'speck-bar-out 200ms ease-out both' : 'speck-bar-in 220ms cubic-bezier(0.2,0.8,0.2,1) both',
+      animField: this.state.searchClosing ? 'speck-field-out 200ms ease-out both' : 'speck-field-in 260ms cubic-bezier(0.2,0.8,0.2,1) both',
+      animKeys: this.state.searchClosing ? 'speck-keys-out 220ms ease-out both' : 'speck-keys-in 260ms cubic-bezier(0.2,0.8,0.2,1) both',
+      animScrim: this.state.searchClosing ? 'speck-scrim-out 220ms ease-out both' : 'speck-scrim-in 200ms ease-out both',
+      closeSearch: () => {
+        if (!this.state.searching) return;
+        this.setState({ searching: false, searchClosing: true });
+        clearTimeout(this._sc);
+        this._sc = setTimeout(() => this.setState({ searchClosing: false, query: '' }), 220);
+      },
+      openSearch: () => { clearTimeout(this._sc); this.setState({ searching: true, searchClosing: false, query: '', swipeId: null, swipeDx: 0 }); },
+      typeKey: (ev) => this.setState(s => ({ query: (s.query || '') + ev.currentTarget.textContent })),
+      backspaceKey: () => this.setState(s => ({ query: (s.query || '').slice(0, -1) })),
+      spaceKey: () => this.setState(s => ({ query: (s.query || '') + ' ' })),
+      noop: () => {},
+      query: this.state.query,
+      onQuery: (v) => this.setState({ query: v }),
+      resultsPad: (this.state.query || '').trim() ? '16px 24px 24px' : '0px',
+      suggestions: ['camus', 'attention', 'kindled', 'aug 25'].map(label => ({
+        label, pick: () => this.setState({ query: label })
+      })),
+      results: this.searchResults().map(e => ({
+        timestamp: e.timestamp,
+        tint: e.image ? 'var(--tint-screenshot)' : 'var(--tint-text)',
+        hasText: !!e.text,
+        text: e.text,
+        hasImage: !!e.image,
+        imageGap: e.text ? '12px' : '0px',
+        openDetail: () => this.setState({ route: 'detail', searching: false, searchClosing: false, detailId: e.id })
+      })),
+      noResults: !!(this.state.query || '').trim() && this.searchResults().length === 0,
+      noResultsTitle: 'no entries match “' + (this.state.query || '').trim() + '”.',
+
+      atFeed: this.state.route === 'feed' || this.state.searching || this.state.route === 'capture',
+      atCapture: this.state.route === 'capture' || this.state.captureClosing,
+      animSheet: this.state.captureClosing
+        ? 'speck-sheet-out 300ms cubic-bezier(0.32,0,0.67,0) both'
+        : 'speck-sheet-in 380ms cubic-bezier(0.16,0.84,0.24,1) both',
+      animSheetScrim: this.state.captureClosing
+        ? 'speck-sheet-scrim-out 300ms ease-out both'
+        : 'speck-sheet-scrim-in 380ms ease-out both',
+      atDetail: this.state.route === 'detail',
+      openCapture: () => { clearTimeout(this._cap); this.setState({ route: 'capture', captureClosing: false, swipeId: null, swipeDx: 0, editingId: null }); },
+      closeCapture: () => {
+        clearTimeout(this._cap);
+        this.setState({ route: 'feed', captureClosing: true, picker: null });
+        this._cap = setTimeout(() => this.setState({ captureClosing: false }), 300);
+      },
+      backToFeed: () => {
+        if (this.state.searching) {
+          this.setState({ searching: false, searchClosing: true });
+          clearTimeout(this._sc);
+          this._sc = setTimeout(() => this.setState({ searchClosing: false, query: '' }), 220);
+          return;
+        }
+        this.setState({ route: 'feed', detailId: null, shotMenu: false, confirm: null });
+      },
+      detailTimestamp: detailEntry.timestamp,
+      detailText: detailEntry.text,
+      detailHasText: !!detailEntry.text,
+
+      draft,
+      attached,
+      onDraftEvent: (ev) => this.setState({ draft: ev.target.value }),
+      attachImage: () => this.setState({ picker: 'menu' }),
+      pickerMenu: this.state.picker === 'menu',
+      pickerLibrary: this.state.picker === 'library',
+      openLibrary: () => this.setState({ picker: 'library' }),
+      closePicker: () => this.setState({ picker: null }),
+      photos: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      selectPhoto: () => this.setState({ attached: true, picker: null }),
+      removeAttachment: () => this.setState({ attached: false }),
+      saving,
+      toast,
+
+      feedEntries: (this.state.entries || []).map(e => {
+        const swiped = this.state.swipeId === e.id;
+        const hasText = !!e.text;
+        return {
+          timestamp: e.timestamp,
+          tint: e.image ? 'var(--tint-screenshot)' : 'var(--tint-text)',
+          blob: BLOBS[e.id % BLOBS.length],
+          blobTilt: (e.id % 5) * 9 - 18 + 'deg',
+          hasImage: !!e.image,
+          imageGap: hasText ? '12px' : '0px',
+          reading: hasText,
+          showHintLabel: this.state.hint === e.id,
+          hintAnim: this.state.hint === e.id ? 'speck-swipe-hint 2300ms cubic-bezier(0.2,0.8,0.2,1) both' : 'none',
+          text: e.text,
+          clamp: e.open ? 'unset' : 3,
+          showToggle: !!e.truncated,
+          measure: (el) => { (this._els || (this._els = {}))[e.id] = el; },
+          toggleLabel: e.open ? 'show less' : 'show more',
+          toggle: () => {
+            if (this._dragged) return;
+            if (this.state.swipeId === e.id && this.state.swipeDx <= -REVEAL / 2) { this.setState({ swipeId: null, swipeDx: 0 }); return; }
+            this.setState(s => ({ entries: s.entries.map(x => x.id === e.id ? { ...x, open: !x.open } : x) }));
+          },
+          dx: (swiped ? this.state.swipeDx : 0) + 'px',
+          revealOpacity: swiped && this.state.swipeDx < -8 ? 1 : 0,
+          spin: Math.round(-45 + (swiped ? Math.min(1, -this.state.swipeDx / REVEAL) : 0) * 45) + 'deg',
+          revealEvents: swiped && this.state.swipeDx <= -REVEAL / 2 ? 'auto' : 'none',
+          swipeTransition: this.state.dragging && swiped ? 'none' : 'transform var(--motion-transition)',
+          onDown: (ev) => { this._x0 = ev.clientX; this._dragged = false; this.setState({ swipeId: e.id, dragging: true, swipeDx: swiped ? this.state.swipeDx : 0 }); },
+          onMove: (ev) => {
+            if (!this.state.dragging || this.state.swipeId !== e.id) return;
+            if (Math.abs(ev.clientX - this._x0) > 6) this._dragged = true;
+            const base = swiped && this.state.swipeDx <= -REVEAL ? -REVEAL : 0;
+            this.setState({ swipeDx: Math.max(-REVEAL, Math.min(0, base + ev.clientX - this._x0)) });
+          },
+          onUp: () => {
+            if (this.state.swipeId !== e.id) return;
+            const open = this.state.swipeDx < -REVEAL / 2;
+            this.setState({ dragging: false, swipeDx: open ? -REVEAL : 0, swipeId: open ? e.id : null, nudge: open ? false : this.state.nudge });
+          },
+          requestDelete: () => this.setState({ menuId: null, confirm: { frame: 'feed', id: e.id } }),
+          selected: !!(this.state.selected || {})[e.id],
+          checkBorder: (this.state.selected || {})[e.id] ? 'var(--ink)' : 'var(--neutral-300)',
+          checkFill: (this.state.selected || {})[e.id] ? 'var(--ink)' : 'transparent',
+          checkMark: (this.state.selected || {})[e.id] ? 'block' : 'none',
+          toggleSelect: () => this.setState(s => ({ selected: { ...(s.selected || {}), [e.id]: !(s.selected || {})[e.id] } })),
+          openDetail: () => { if (!this._dragged) this.setState({ route: 'detail', detailId: e.id }); }
+        };
+      }),
+
+      editDraft: this.state.editDraft,
+      onEditDraft: (v) => this.setState({ editDraft: v }),
+      cancelEdit: () => this.setState({ editingId: null, editDraft: '' }),
+      saveEdit: () => this.setState(s => ({
+        editingId: null, editDraft: '',
+        entries: s.entries.map(x => x.id === s.editingId ? { ...x, text: (s.editDraft || '').trim() || x.text, truncated: undefined, open: false } : x)
+      })),
+
+      confirmFeed: !!(this.state.confirm && this.state.confirm.frame === 'feed'),
+      confirmShot: !!(this.state.confirm && this.state.confirm.frame === 'shot'),
+      requestDeleteShot: () => this.setState({ shotMenu: false, confirm: { frame: 'shot', id: this.state.detailId } }),
+      closeCardMenu: () => this.setState({ menuId: null }),
+
+      appMenu: !!this.state.appMenu,
+      toggleAppMenu: () => this.setState(s => ({ appMenu: !s.appMenu })),
+      closeAppMenu: () => this.setState({ appMenu: false }),
+      selecting: !!this.state.selecting,
+      browsing: !this.state.selecting,
+      enterSelect: () => this.setState({ appMenu: false, selecting: true, selected: {}, swipeId: null, swipeDx: 0, editingId: null }),
+      exitSelect: () => this.setState({ selecting: false, selected: {} }),
+      selectedLabel: (() => {
+        const n = Object.keys(this.state.selected || {}).filter(k => this.state.selected[k]).length;
+        return n === 0 ? 'select entries' : n === 1 ? '1 selected' : n + ' selected';
+      })(),
+      noneSelected: this.selectedIds().length === 0,
+      deleteColor: this.selectedIds().length ? 'var(--secondary-700)' : 'var(--neutral-500)',
+      requestDeleteSelected: () => {
+        if (!this.selectedIds().length) return;
+        this.setState({ confirm: { frame: 'feed', ids: this.selectedIds() } });
+      },
+      confirmTitle: (() => {
+        const c = this.state.confirm;
+        const n = c && c.ids ? c.ids.length : 1;
+        return n === 1 ? 'delete this entry?' : 'delete ' + n + ' entries?';
+      })(),
+
+      cancelDelete: () => this.setState({ confirm: null, menuId: null, swipeId: null, swipeDx: 0 }),
+      confirmDelete: () => this.setState(s => ({
+        confirm: null, swipeId: null, swipeDx: 0,
+        route: s.confirm && s.confirm.frame === 'shot' ? 'feed' : s.route,
+        detailId: null, selecting: false, selected: {},
+        entries: s.entries.filter(x => {
+          if (!s.confirm) return true;
+          if (s.confirm.ids) return !s.confirm.ids.includes(x.id);
+          return x.id !== s.confirm.id;
+        })
+      })),
+
+      onSave: () => {
+        if (saving) return;
+        const text = draft.trim();
+        const image = attached;
+        this.setState({ saving: true });
+        this._s = setTimeout(() => {
+          this.setState(s => ({
+            saving: false, draft: '', attached: false, toast: true, route: 'feed', captureClosing: true, hintPending: true,
+
+            entries: (text || image) ? [{ id: Date.now(), text, image, timestamp: this.stamp(), open: false }, ...(s.entries || [])] : s.entries
+          }));
+          this._toast = setTimeout(() => this.setState({ toast: false }), 1600);
+        }, 900);
+      },
+
+      shotMenu,
+      toggleShotMenu: () => this.setState(s => ({ shotMenu: !s.shotMenu })),
+      closeMenus: () => this.setState({ shotMenu: false }),
+
+      errDraft,
+      onErrDraftEvent: (ev) => this.setState({ errDraft: ev.target.value }),
+      errSaving,
+      errTone: errFixed ? 'success' : 'error',
+      errLead: errFixed ? 'saved.' : 'couldn’t save.',
+      errBody: errFixed ? 'the entry is in your log.' : 'your draft is still here — tap retry.',
+      errAction: errFixed ? '' : 'retry',
+      onRetry: () => {
+        if (errSaving) return;
+        this.setState({ errSaving: true });
+        setTimeout(() => this.setState({ errSaving: false, errFixed: true }), 900);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

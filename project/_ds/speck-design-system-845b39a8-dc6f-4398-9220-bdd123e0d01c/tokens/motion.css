@@ -1,0 +1,11 @@
+/* one transition, one press. no bounce, no spring, no entrance animation. */
+:root{
+--motion-transition:160ms ease-out; /* @kind other */
+--motion-press:80ms ease-out; /* @kind other */
+--motion-press-scale:0.98; /* @kind other */
+--toast-duration:1600ms; /* @kind other */
+--elevation-none:none; /* the system has no shadows: cards and bars use a 1px line */
+--border-width:1px;
+--border-width-input:1.9px;
+--focus-ring-width:3px;
+}

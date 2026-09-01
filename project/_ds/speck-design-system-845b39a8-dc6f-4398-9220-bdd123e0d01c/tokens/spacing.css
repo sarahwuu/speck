@@ -1,0 +1,21 @@
+/* 4px base unit. bottom of the scale reserves the ios home-indicator safe area. */
+:root{
+--space-1:4px;   /* icon-to-label gaps */
+--space-2:8px;   /* tight internal padding */
+--space-3:12px;  /* grid gaps, stamp tiles */
+--space-4:16px;  /* card padding, list gutters */
+--space-6:24px;  /* screen side margins */
+--space-8:32px;  /* between major sections */
+--space-12:48px; /* top-of-screen and home-indicator safe padding */
+
+--screen-margin:24px;
+--card-padding:16px;
+--safe-bottom:48px;
+--appbar-height:56px;
+--tap-target:44px;
+--btn-height:34px;
+--btn-height-sm:30px;
+--fab-size:56px;
+--icon-size:20px;
+--icon-grid:24px;
+}

@@ -1,0 +1,94 @@
+/* speck colour system — three ramps, 900 (darkest) to 100 (lightest).
+   Authored in oklch exactly as the design spec states them. */
+:root{
+/* primary — slate blue, hue 260 */
+--primary-900:oklch(0.20 0.08 260);
+--primary-800:oklch(0.26 0.10 260);
+--primary-700:oklch(0.32 0.10 260);
+--primary-600:oklch(0.40 0.11 260);
+--primary-500:oklch(0.50 0.10 260);
+--primary-400:oklch(0.60 0.08 260);
+--primary-300:oklch(0.72 0.05 260);
+--primary-200:oklch(0.85 0.03 260);
+--primary-100:oklch(0.94 0.015 260);
+
+/* neutral — warm, hue 90 */
+--neutral-900:oklch(0.22 0.01 90);
+--neutral-800:oklch(0.29 0.01 90);
+--neutral-700:oklch(0.40 0.01 90);
+--neutral-600:oklch(0.50 0.01 90);
+--neutral-500:oklch(0.62 0.01 90);
+--neutral-400:oklch(0.72 0.01 90);
+--neutral-300:oklch(0.80 0.01 90);
+--neutral-200:oklch(0.88 0.01 90);
+--neutral-100:oklch(0.94 0.01 90);
+--neutral-paper:oklch(0.98 0.01 90);
+--black:#000;
+--white:#fff;
+
+/* secondary — brick, hue 27. sparingly. never a second brand colour. */
+--secondary-900:oklch(0.22 0.09 27);
+--secondary-800:oklch(0.30 0.12 27);
+--secondary-700:oklch(0.38 0.14 27);
+--secondary-600:oklch(0.48 0.14 27);
+--secondary-500:oklch(0.58 0.14 27);
+--secondary-400:oklch(0.68 0.12 27);
+--secondary-300:oklch(0.78 0.09 27);
+--secondary-200:oklch(0.88 0.05 27);
+--secondary-100:oklch(0.95 0.02 27);
+
+/* functional */
+--error:oklch(0.38 0.14 27);
+--error-bg:oklch(0.95 0.02 27);
+--error-line:oklch(0.88 0.05 27);
+--success:oklch(0.42 0.07 150);
+--success-bg:oklch(0.95 0.02 150);
+--success-line:oklch(0.88 0.05 150);
+
+/* transparency scale — same steps applied to any ramp colour.
+   shown on ink; use for scrims, pressed states and dividers. */
+--ink-80:oklch(0.22 0.01 90 / 0.80);
+--ink-64:oklch(0.22 0.01 90 / 0.64);
+--ink-56:oklch(0.22 0.01 90 / 0.56);
+--ink-40:oklch(0.22 0.01 90 / 0.40);
+--ink-24:oklch(0.22 0.01 90 / 0.24);
+--ink-16:oklch(0.22 0.01 90 / 0.16);
+--ink-08:oklch(0.22 0.01 90 / 0.08);
+--ink-04:oklch(0.22 0.01 90 / 0.04);
+
+/* named aliases into the ramps */
+--ink:var(--neutral-900);
+--muted:var(--neutral-800);
+--line:var(--neutral-200);
+--paper:var(--neutral-paper);
+
+/* semantic */
+--text-body:var(--ink);
+--text-heading:var(--ink);
+--text-muted:var(--muted);
+--text-meta:var(--neutral-700);
+--text-placeholder:var(--neutral-500);
+--text-accent:var(--primary-700);
+--text-on-ink:var(--white);
+--text-disabled:var(--neutral-500);
+--surface-page:var(--paper);
+--surface-card:var(--white);
+--surface-sunken:var(--neutral-100);
+--surface-fill:var(--ink);
+--surface-disabled:var(--neutral-200);
+--border-default:var(--line);
+--border-strong:var(--neutral-300);
+--border-input:var(--neutral-200);
+--border-input-active:var(--primary-700);
+--focus-ring:var(--primary-300);
+
+/* fills are ink, not blue — these two are the literal button state fills */
+--fill-ink-hover:#302e28;
+--fill-ink-pressed:#110f0a;
+
+/* entry-type tint dots */
+--tint-text:var(--primary-300);
+--tint-screenshot:var(--primary-400);
+--tint-audio:var(--primary-500);
+--waveform:#9da5b2;
+}

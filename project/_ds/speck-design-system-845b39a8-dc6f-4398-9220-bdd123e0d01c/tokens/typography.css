@@ -1,0 +1,55 @@
+/* speck type — figtree carries the interface; pt serif is the one editorial
+   gesture (display numerals, month headings); space mono is documentation only. */
+:root{
+--font-sans:'Figtree',system-ui,-apple-system,sans-serif;
+--font-serif:'PT Serif',Georgia,serif;
+--font-mono:'Space Mono','SFMono-Regular',ui-monospace,monospace;
+
+--fw-wordmark:400; /* @kind font */
+--fw-medium:500; /* @kind font */
+--fw-semibold:540; /* @kind font */
+--fw-bold:620; /* @kind font */
+
+--text-display-family:var(--font-serif);
+--text-display-size:56px;
+--text-display-weight:700;
+--text-display-lh:1;
+
+--text-h1-family:var(--font-sans);
+--text-h1-size:32px;
+--text-h1-weight:620;
+--text-h1-lh:1.15;
+
+--text-h2-family:var(--font-serif);
+--text-h2-size:24px;
+--text-h2-weight:400;
+--text-h2-style:italic;
+
+--text-h3-family:var(--font-sans);
+--text-h3-size:20px;
+--text-h3-weight:540;
+--text-h3-lh:1.25;
+
+--text-subtitle1-size:18px;
+--text-subtitle1-weight:500;
+--text-subtitle1-lh:1.35;
+
+--text-subtitle2-size:11px;
+--text-subtitle2-weight:540;
+--text-subtitle2-tracking:0.02em;
+--text-subtitle2-transform:uppercase;
+
+--text-body1-size:16px;
+--text-body1-lh:1.55;
+--text-body1-weight:500;
+--text-body1-weight-semibold:540;
+
+--text-body2-size:13px;
+--text-body2-lh:1.45;
+--text-body2-weight:500;
+--text-body2-weight-semibold:540;
+
+/* 16px rem floor also prevents safari's auto-zoom on input focus */
+--rem-base:16px;
+--text-min-input:16px;
+}

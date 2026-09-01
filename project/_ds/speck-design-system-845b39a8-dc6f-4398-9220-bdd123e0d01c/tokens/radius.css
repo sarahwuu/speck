@@ -1,0 +1,9 @@
+/* mostly square — radius is reserved for things you tap. */
+:root{
+--radius-flush:0;    /* page containers */
+--radius-xs:3px;     /* calendar / stamp tiles */
+--radius-sm:8px;     /* cards, inputs, swatches */
+--radius-md:16px;    /* segmented toggle */
+--radius-pill:999px; /* primary buttons, avatar */
+--radius-logo-tile:14px;
+}
