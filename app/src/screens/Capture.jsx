@@ -1,7 +1,7 @@
 import IconButton from '../ds/IconButton.jsx';
 import Button from '../ds/Button.jsx';
 import Toast from '../ds/Toast.jsx';
-import StatusBar from '../components/StatusBar.jsx';
+import { SAFE_BOTTOM, SAFE_TOP } from '../lib/safeArea.js';
 
 const PHOTOS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -43,15 +43,14 @@ export default function Capture({
           display: 'flex',
           flexDirection: 'column',
           background: 'var(--surface-page)',
-          borderRadius: 44,
           overflow: 'hidden',
           willChange: 'transform',
+          paddingTop: SAFE_TOP,
           animation: closing
             ? 'speck-sheet-out 300ms cubic-bezier(0.32,0,0.67,0) both'
             : 'speck-sheet-in 380ms cubic-bezier(0.16,0.84,0.24,1) both',
         }}
       >
-        <StatusBar />
         <div style={{ height: 56, display: 'flex', alignItems: 'center', padding: '0 12px', flex: 'none' }}>
           <IconButton name="close" label="close capture" onClick={onClose} />
         </div>
@@ -128,7 +127,7 @@ export default function Capture({
           ) : null}
         </div>
 
-        <div style={{ padding: '0 24px 48px', display: 'flex', justifyContent: 'flex-end', flex: 'none' }}>
+        <div style={{ padding: `0 24px ${SAFE_BOTTOM(48)}`, display: 'flex', justifyContent: 'flex-end', flex: 'none' }}>
           <Button onClick={onSave} loading={saving} loadingLabel="saving…" style={{ height: 34 }}>
             save
           </Button>
@@ -142,7 +141,7 @@ export default function Capture({
                 position: 'absolute',
                 left: 24,
                 right: 24,
-                bottom: 48,
+                bottom: SAFE_BOTTOM(48),
                 background: 'var(--surface-card)',
                 border: '1px solid var(--line)',
                 borderRadius: 8,
@@ -172,7 +171,7 @@ export default function Capture({
                 position: 'absolute',
                 left: 24,
                 right: 24,
-                bottom: 48,
+                bottom: SAFE_BOTTOM(48),
                 background: 'var(--surface-card)',
                 border: '1px solid var(--line)',
                 borderRadius: 8,
@@ -208,7 +207,7 @@ export default function Capture({
           </>
         ) : null}
 
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 116, display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: SAFE_BOTTOM(116), display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
           <Toast visible={toast}>saved</Toast>
         </div>
       </div>

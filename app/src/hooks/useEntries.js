@@ -4,20 +4,12 @@ import { stamp } from '../lib/format.js';
 
 const STORAGE_KEY = 'speck.entries';
 
-const SEED = [
-  {
-    id: 1,
-    timestamp: 'aug 25, 4:12pm',
-    text: 'the mind is not a vessel to be filled but a fire to be kindled, and what kindles it is rarely the thing you set out to read — it is the sentence you did not expect, arriving mid-scroll, three paragraphs into something you were only half attending to.',
-  },
-  { id: 2, timestamp: 'aug 25, 11:04am', text: 'the paragraph about attention as a currency', image: true },
-  { id: 3, timestamp: 'aug 24, 9:20pm', image: true },
-];
-
 /** Entries — text and screenshot, two types only — persisted to
- * localStorage so a save survives a reload. */
+ * localStorage so a save survives a reload. The app starts empty: the
+ * design system's sample quotes were only for the design prototype, not
+ * real seed content. */
 export function useEntries() {
-  const [entries, setEntries] = useState(() => readStorage(STORAGE_KEY, SEED));
+  const [entries, setEntries] = useState(() => readStorage(STORAGE_KEY, []));
 
   useEffect(() => {
     writeStorage(STORAGE_KEY, entries);

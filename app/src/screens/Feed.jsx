@@ -1,10 +1,10 @@
-import StatusBar from '../components/StatusBar.jsx';
 import EntryCard from '../components/EntryCard.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import IconButton from '../ds/IconButton.jsx';
 import QuickCaptureButton from '../ds/QuickCaptureButton.jsx';
 import EmptyState from '../ds/EmptyState.jsx';
 import logoMarkInk from '../assets/logo/speck-mark-ink.png';
+import { SAFE_BOTTOM, SAFE_TOP } from '../lib/safeArea.js';
 
 function selectedLabelFor(count) {
   if (count === 0) return 'select entries';
@@ -46,9 +46,7 @@ export default function Feed({
   const confirmTitle = confirm && confirm.ids ? `delete ${confirm.ids.length} entries?` : 'delete this entry?';
 
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
-      <StatusBar />
-
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', paddingTop: SAFE_TOP }}>
       {selecting ? (
         <div
           style={{
@@ -175,7 +173,7 @@ export default function Feed({
         <ConfirmDialog title={confirmTitle} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
       ) : null}
 
-      <QuickCaptureButton fixed={false} onClick={onOpenCapture} label="new entry" style={{ position: 'absolute', right: 24, bottom: 48 }} />
+      <QuickCaptureButton fixed={false} onClick={onOpenCapture} label="new entry" style={{ position: 'absolute', right: 24, bottom: SAFE_BOTTOM(48) }} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import IconButton from '../ds/IconButton.jsx';
-import StatusBar from '../components/StatusBar.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import { DETAIL_BLOB } from '../lib/blobs.js';
+import { SAFE_TOP } from '../lib/safeArea.js';
 
 /** Screenshot entry detail — image, caption if there is one (text always
  * leads), timestamp, back arrow, and the "⋯" menu that's the only place
@@ -9,8 +9,7 @@ import { DETAIL_BLOB } from '../lib/blobs.js';
 export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCloseMenus, onEdit, onRequestDelete, confirm, onCancelDelete, onConfirmDelete }) {
   if (!entry) return null;
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column' }}>
-      <StatusBar />
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', paddingTop: SAFE_TOP }}>
       <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 4, padding: '0 12px', flex: 'none' }}>
         <IconButton name="back" label="back to feed" onClick={onBack} />
         <div style={{ flex: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>

@@ -314,16 +314,15 @@ export default function App() {
   const detailEntry = entries.find((e) => e.id === detailId) || null;
 
   return (
-    <div style={{ padding: 48, fontFamily: 'var(--font-sans)', boxSizing: 'border-box', display: 'flex', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100dvh', fontFamily: 'var(--font-sans)', boxSizing: 'border-box', display: 'flex', justifyContent: 'center', background: 'var(--surface-page)' }}>
       <div
         style={{
-          width: 390,
-          height: 844,
+          width: '100%',
+          maxWidth: 480,
+          minHeight: '100dvh',
           position: 'relative',
           overflow: 'hidden',
           background: 'var(--surface-page)',
-          border: '1px solid var(--line)',
-          borderRadius: 44,
         }}
       >
         {route !== 'detail' ? (
@@ -408,19 +407,6 @@ export default function App() {
         ) : null}
 
         {splashPhase !== 'done' ? <Splash fadingOut={splashPhase === 'out'} /> : null}
-
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: 9,
-            transform: 'translateX(-50%)',
-            width: 134,
-            height: 5,
-            borderRadius: 999,
-            background: 'var(--ink-24)',
-          }}
-        />
       </div>
     </div>
   );

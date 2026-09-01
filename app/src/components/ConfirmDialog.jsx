@@ -1,4 +1,5 @@
 import Button from '../ds/Button.jsx';
+import { SAFE_BOTTOM } from '../lib/safeArea.js';
 
 /** The one delete confirmation in the app — swipe, the feed's multi-select
  * delete, and the screenshot detail's ⋯ menu all route through this same
@@ -14,7 +15,7 @@ export default function ConfirmDialog({ title, onCancel, onConfirm }) {
           zIndex: 4,
           left: 24,
           right: 24,
-          bottom: 48,
+          bottom: SAFE_BOTTOM(48),
           background: 'var(--surface-card)',
           border: '1px solid var(--line)',
           borderRadius: 8,
