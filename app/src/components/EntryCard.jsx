@@ -219,24 +219,23 @@ export default function EntryCard({
             </>
           ) : null}
           {hasImage ? (
-            <div
+            <img
+              src={entry.image}
+              alt=""
               onClick={onOpenDetail}
               style={{
                 cursor: 'pointer',
                 marginTop: hasText ? 12 : 0,
+                width: '100%',
                 height: 176,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'block',
+                objectFit: 'cover',
                 background: 'var(--surface-sunken)',
                 border: '1.9px solid var(--neutral-300)',
                 borderRadius: 8,
-                font: '500 13px/1.45 var(--font-sans)',
-                color: 'var(--muted)',
+                boxSizing: 'border-box',
               }}
-            >
-              screenshot placeholder
-            </div>
+            />
           ) : null}
         </div>
       </div>

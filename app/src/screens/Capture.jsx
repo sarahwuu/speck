@@ -1,29 +1,44 @@
+import { useRef, useState } from 'react';
 import IconButton from '../ds/IconButton.jsx';
 import Button from '../ds/Button.jsx';
 import Toast from '../ds/Toast.jsx';
 import { SAFE_BOTTOM, SAFE_TOP } from '../lib/safeArea.js';
-
-const PHOTOS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import { fileToDataUrl } from '../lib/image.js';
 
 /** The capture sheet: one open textarea, one attach-image icon, one save
  * action. Rises from the bottom as a true top layer over the still-mounted
- * feed. */
+ * feed. The attach icon opens the device's own photo/camera picker — no
+ * in-app mock of one. */
 export default function Capture({
   closing,
   draft,
   onDraftChange,
   attached,
-  onAttachImage,
+  onAttach,
   onRemoveAttachment,
-  picker,
-  onOpenLibrary,
-  onClosePicker,
-  onSelectPhoto,
   saving,
   onSave,
   toast,
   onClose,
 }) {
+  const fileInputRef = useRef(null);
+  const [loadingPhoto, setLoadingPhoto] = useState(false);
+
+  async function onFileChange(e) {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = ''; // allow picking the same file again later
+    if (!file) return;
+    setLoadingPhoto(true);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      onAttach(dataUrl);
+    } catch {
+      // picker was cancelled, or the file couldn't be read — just drop it
+    } finally {
+      setLoadingPhoto(false);
+    }
+  }
+
   return (
     <>
       <div
@@ -54,7 +69,7 @@ export default function Capture({
         <div style={{ height: 56, display: 'flex', alignItems: 'center', padding: '0 12px', flex: 'none' }}>
           <IconButton name="close" label="close capture" onClick={onClose} />
         </div>
-        <div style={{ flex: 1, padding: '8px 24px 0', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ flex: 1, padding: '8px 24px 0', display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
           <div style={{ position: 'relative' }}>
             <textarea
               value={draft}
@@ -74,10 +89,19 @@ export default function Capture({
                 color: 'var(--ink)',
               }}
             />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={onFileChange}
+              style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+              tabIndex={-1}
+            />
             <button
               type="button"
-              onClick={onAttachImage}
-              aria-label="add an image"
+              onClick={() => fileInputRef.current && fileInputRef.current.click()}
+              disabled={loadingPhoto}
+              aria-label="add a photo from your camera roll or camera"
               style={{
                 position: 'absolute',
                 right: -10,
@@ -90,8 +114,8 @@ export default function Capture({
                 border: 'none',
                 borderRadius: 999,
                 background: 'transparent',
-                color: 'var(--ink)',
-                cursor: 'pointer',
+                color: loadingPhoto ? 'var(--neutral-400)' : 'var(--ink)',
+                cursor: loadingPhoto ? 'default' : 'pointer',
                 padding: 0,
               }}
             >
@@ -105,23 +129,22 @@ export default function Capture({
 
           {attached ? (
             <div style={{ position: 'relative' }}>
-              <div
+              <img
+                src={attached}
+                alt=""
                 style={{
+                  width: '100%',
                   height: 176,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: 'block',
+                  objectFit: 'cover',
                   background: 'var(--surface-sunken)',
                   border: '1.9px solid var(--neutral-300)',
                   borderRadius: 8,
-                  font: '500 13px/1.45 var(--font-sans)',
-                  color: 'var(--muted)',
+                  boxSizing: 'border-box',
                 }}
-              >
-                screenshot placeholder
-              </div>
+              />
               <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                <IconButton name="close" label="remove the attached screenshot" onClick={onRemoveAttachment} />
+                <IconButton name="close" label="remove the attached photo" onClick={onRemoveAttachment} />
               </div>
             </div>
           ) : null}
@@ -133,98 +156,10 @@ export default function Capture({
           </Button>
         </div>
 
-        {picker === 'menu' ? (
-          <>
-            <div onClick={onClosePicker} style={{ position: 'absolute', inset: 0, background: 'var(--ink-16)' }} />
-            <div
-              style={{
-                position: 'absolute',
-                left: 24,
-                right: 24,
-                bottom: SAFE_BOTTOM(48),
-                background: 'var(--surface-card)',
-                border: '1px solid var(--line)',
-                borderRadius: 8,
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <button type="button" onClick={onOpenLibrary} style={menuItemStyle(true)}>
-                browse photos
-              </button>
-              <button type="button" onClick={onOpenLibrary} style={menuItemStyle(true)}>
-                take a photo
-              </button>
-              <button type="button" onClick={onClosePicker} style={{ ...menuItemStyle(false), color: 'var(--muted)' }}>
-                cancel
-              </button>
-            </div>
-          </>
-        ) : null}
-
-        {picker === 'library' ? (
-          <>
-            <div onClick={onClosePicker} style={{ position: 'absolute', inset: 0, background: 'var(--ink-16)' }} />
-            <div
-              style={{
-                position: 'absolute',
-                left: 24,
-                right: 24,
-                bottom: SAFE_BOTTOM(48),
-                background: 'var(--surface-card)',
-                border: '1px solid var(--line)',
-                borderRadius: 8,
-                padding: 16,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-                <span style={{ font: '540 11px/1.2 var(--font-sans)', letterSpacing: '0.02em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-                  RECENT PHOTOS
-                </span>
-                <IconButton name="close" label="close the photo picker" onClick={onClosePicker} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                {PHOTOS.map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={onSelectPhoto}
-                    aria-label="attach this photo"
-                    style={{ aspectRatio: '1', padding: 0, border: '1.9px solid var(--neutral-300)', borderRadius: 8, background: 'var(--surface-sunken)', cursor: 'pointer' }}
-                  />
-                ))}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button level="tertiary" size="small" onClick={onClosePicker} style={{ height: 30 }}>
-                  cancel
-                </Button>
-              </div>
-            </div>
-          </>
-        ) : null}
-
         <div style={{ position: 'absolute', left: 0, right: 0, bottom: SAFE_BOTTOM(116), display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
           <Toast visible={toast}>saved</Toast>
         </div>
       </div>
     </>
   );
-}
-
-function menuItemStyle(bordered) {
-  return {
-    height: 52,
-    padding: '0 16px',
-    textAlign: 'left',
-    border: 'none',
-    borderBottom: bordered ? '1px solid var(--line)' : 'none',
-    background: 'transparent',
-    font: '500 16px/1 var(--font-sans)',
-    color: 'var(--ink)',
-    cursor: 'pointer',
-  };
 }

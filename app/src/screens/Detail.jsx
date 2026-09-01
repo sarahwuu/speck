@@ -21,21 +21,20 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
 
       <div style={{ flex: 1, padding: '8px 24px 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)' }}>{entry.text}</p> : null}
-        <div
+        <img
+          src={entry.image}
+          alt=""
           style={{
-            height: 480,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: '100%',
+            minHeight: 480,
+            display: 'block',
+            objectFit: 'cover',
             background: 'var(--surface-sunken)',
             border: '1.9px solid var(--neutral-300)',
             borderRadius: 8,
-            font: '500 13px/1.45 var(--font-sans)',
-            color: 'var(--muted)',
+            boxSizing: 'border-box',
           }}
-        >
-          screenshot placeholder
-        </div>
+        />
       </div>
 
       {shotMenu ? (

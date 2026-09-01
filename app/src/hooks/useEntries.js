@@ -18,7 +18,10 @@ export function useEntries() {
   function addEntry(text, image) {
     const trimmedText = (text || '').trim();
     if (!trimmedText && !image) return null;
-    const entry = { id: Date.now(), text: trimmedText, image: !!image, timestamp: stamp(), open: false };
+    // `image`, when present, is the attached photo's own data URL — kept
+    // as-is (not coerced to a boolean) so the feed and detail screen can
+    // actually render it.
+    const entry = { id: Date.now(), text: trimmedText, image: image || false, timestamp: stamp(), open: false };
     setEntries((prev) => [entry, ...prev]);
     return entry;
   }

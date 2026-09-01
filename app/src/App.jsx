@@ -88,8 +88,7 @@ export default function App() {
   // ---- capture sheet -----------------------------------------------------
   const [captureClosing, setCaptureClosing] = useState(false);
   const [draft, setDraft] = useState('');
-  const [attached, setAttached] = useState(false);
-  const [picker, setPicker] = useState(null); // null | 'menu' | 'library'
+  const [attached, setAttached] = useState(false); // false, or the attached photo's data URL
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(false);
   const [saveVersion, setSaveVersion] = useState(0);
@@ -225,7 +224,6 @@ export default function App() {
     clearTimeout(captureTimer.current);
     setRoute('feed');
     setCaptureClosing(true);
-    setPicker(null);
     captureTimer.current = setTimeout(() => setCaptureClosing(false), 300);
   }, []);
 
@@ -361,15 +359,8 @@ export default function App() {
             draft={draft}
             onDraftChange={setDraft}
             attached={attached}
-            onAttachImage={() => setPicker('menu')}
+            onAttach={setAttached}
             onRemoveAttachment={() => setAttached(false)}
-            picker={picker}
-            onOpenLibrary={() => setPicker('library')}
-            onClosePicker={() => setPicker(null)}
-            onSelectPhoto={() => {
-              setAttached(true);
-              setPicker(null);
-            }}
             saving={saving}
             onSave={onSave}
             toast={toast}
