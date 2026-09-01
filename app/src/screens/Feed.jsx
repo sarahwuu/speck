@@ -120,20 +120,20 @@ export default function Feed({
               <EntryCard
                 key={entry.id}
                 entry={entry}
-                cardRef={(el) => registerCardRef(entry.id, el)}
+                registerCardRef={registerCardRef}
                 dx={isActive ? swipe.dx : 0}
                 dragging={isActive && swipe.dragging}
                 hinting={hintId === entry.id}
                 flashing={flashId === entry.id}
                 selecting={selecting}
                 selected={selected.has(entry.id)}
-                onToggleSelect={() => onToggleSelect(entry.id)}
-                onPointerDown={(e) => swipe.onDown(entry.id, e)}
-                onPointerMove={(e) => swipe.onMove(entry.id, e)}
-                onPointerUp={() => swipe.onUp(entry.id)}
-                onRequestDelete={() => onRequestDelete(entry.id)}
-                onToggleText={() => onToggleText(entry.id)}
-                onOpenDetail={() => onOpenDetail(entry.id)}
+                onToggleSelect={onToggleSelect}
+                onPointerDown={swipe.onDown}
+                onPointerMove={swipe.onMove}
+                onPointerUp={swipe.onUp}
+                onRequestDelete={onRequestDelete}
+                onToggleText={onToggleText}
+                onOpenDetail={onOpenDetail}
               />
             );
           })

@@ -132,11 +132,13 @@ export default function Capture({
               <img
                 src={attached}
                 alt=""
+                draggable={false}
                 style={{
-                  width: '100%',
-                  height: 176,
                   display: 'block',
-                  objectFit: 'cover',
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: 320,
+                  objectFit: 'contain',
                   background: 'var(--surface-sunken)',
                   border: '1.9px solid var(--neutral-300)',
                   borderRadius: 8,

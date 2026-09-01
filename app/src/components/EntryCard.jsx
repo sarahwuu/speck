@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useClampMeasure } from '../hooks/useClampMeasure.js';
 import { blobFor, tiltFor } from '../lib/blobs.js';
 import { REVEAL } from '../lib/swipe.js';
@@ -6,10 +7,16 @@ import { REVEAL } from '../lib/swipe.js';
  * One feed card, text or screenshot. Carries its own swipe-to-delete
  * gesture (dx/dragging come from the feed, which keeps only one card's
  * swipe open at a time) and its own "show more" clamp measurement.
+ *
+ * Memoized: every handler prop is a stable (id, e) => void reference
+ * bound here to `entry.id`, and dx/dragging are 0/false for every card
+ * except the one actually being dragged — so React.memo can skip
+ * re-rendering the other cards on every pixel of a swipe instead of
+ * reconciling the whole list on each pointermove.
  */
-export default function EntryCard({
+function EntryCard({
   entry,
-  cardRef,
+  registerCardRef,
   dx,
   dragging,
   hinting,
@@ -24,6 +31,7 @@ export default function EntryCard({
   onToggleText,
   onOpenDetail,
 }) {
+  const id = entry.id;
   const hasText = !!entry.text;
   const hasImage = !!entry.image;
   const { ref: measureRef, truncated } = useClampMeasure(entry.text, entry.open);
@@ -42,15 +50,15 @@ export default function EntryCard({
     : 'none';
 
   return (
-    <div ref={cardRef} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div ref={(el) => registerCardRef(id, el)} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
         <span
           style={{
             width: 8,
             height: 8,
             flex: 'none',
-            borderRadius: blobFor(entry.id),
-            transform: `rotate(${tiltFor(entry.id)})`,
+            borderRadius: blobFor(id),
+            transform: `rotate(${tiltFor(id)})`,
             background: tint,
           }}
         />
@@ -60,7 +68,7 @@ export default function EntryCard({
         {selecting ? (
           <button
             type="button"
-            onClick={onToggleSelect}
+            onClick={() => onToggleSelect(id)}
             aria-label="select this entry"
             aria-pressed={selected}
             style={{
@@ -125,7 +133,7 @@ export default function EntryCard({
         >
           <button
             type="button"
-            onClick={onRequestDelete}
+            onClick={() => onRequestDelete(id)}
             aria-label="delete this entry"
             style={{
               position: 'relative',
@@ -163,10 +171,17 @@ export default function EntryCard({
         </div>
 
         <div
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
+          onPointerDown={(e) => {
+            // Explicit capture: without it, only touch input keeps tracking
+            // a drag that wanders outside the card's own bounds — a mouse
+            // (or a fast, slightly diagonal swipe) loses the gesture the
+            // moment the pointer crosses the edge.
+            e.currentTarget.setPointerCapture(e.pointerId);
+            onPointerDown(id, e);
+          }}
+          onPointerMove={(e) => onPointerMove(id, e)}
+          onPointerUp={() => onPointerUp(id)}
+          onPointerCancel={() => onPointerUp(id)}
           style={{
             position: 'relative',
             background: 'var(--surface-card)',
@@ -185,7 +200,7 @@ export default function EntryCard({
             <>
               <p
                 ref={measureRef}
-                onClick={onToggleText}
+                onClick={() => onToggleText(id)}
                 style={{
                   margin: 0,
                   font: '500 16px/1.55 var(--font-sans)',
@@ -202,7 +217,7 @@ export default function EntryCard({
               {truncated ? (
                 <button
                   type="button"
-                  onClick={onToggleText}
+                  onClick={() => onToggleText(id)}
                   style={{
                     marginTop: 10,
                     padding: 0,
@@ -222,14 +237,16 @@ export default function EntryCard({
             <img
               src={entry.image}
               alt=""
-              onClick={onOpenDetail}
+              draggable={false}
+              onClick={() => onOpenDetail(id)}
               style={{
                 cursor: 'pointer',
                 marginTop: hasText ? 12 : 0,
-                width: '100%',
-                height: 176,
                 display: 'block',
-                objectFit: 'cover',
+                width: '100%',
+                height: 'auto',
+                maxHeight: 320,
+                objectFit: 'contain',
                 background: 'var(--surface-sunken)',
                 border: '1.9px solid var(--neutral-300)',
                 borderRadius: 8,
@@ -257,3 +274,5 @@ export default function EntryCard({
     </div>
   );
 }
+
+export default memo(EntryCard);

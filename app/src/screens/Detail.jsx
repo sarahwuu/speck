@@ -24,11 +24,13 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
         <img
           src={entry.image}
           alt=""
+          draggable={false}
           style={{
-            width: '100%',
-            minHeight: 480,
             display: 'block',
-            objectFit: 'cover',
+            width: '100%',
+            height: 'auto',
+            maxHeight: '45vh',
+            objectFit: 'contain',
             background: 'var(--surface-sunken)',
             border: '1.9px solid var(--neutral-300)',
             borderRadius: 8,

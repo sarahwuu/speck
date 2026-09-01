@@ -59,12 +59,26 @@ export default function App() {
   const swipeRef = useRef({ id: null, dx: 0, dragging: false });
   const dragStartX = useRef(0);
   const dragged = useRef(false);
+  // pointermove can fire far more often than the screen repaints; coalesce
+  // it to at most one state commit per animation frame so dragging a card
+  // doesn't queue up more re-renders than there are frames to show them in.
+  const pendingMove = useRef(null);
+  const moveRaf = useRef(0);
 
   function commitSwipe(id, dx, isDragging) {
     swipeRef.current = { id, dx, dragging: isDragging };
     setSwipeOpenId(id);
     setSwipeDx(dx);
     setDragging(isDragging);
+  }
+
+  function flushPendingMove() {
+    moveRaf.current = 0;
+    if (pendingMove.current) {
+      const { id, dx } = pendingMove.current;
+      pendingMove.current = null;
+      commitSwipe(id, dx, true);
+    }
   }
 
   // ---- feed: search jump + flash-highlight ------------------------------
@@ -112,6 +126,7 @@ export default function App() {
       clearTimeout(toastTimer.current);
       clearTimeout(searchCloseTimer.current);
       clearTimeout(flashTimer.current);
+      cancelAnimationFrame(moveRaf.current);
     },
     [],
   );
@@ -122,28 +137,47 @@ export default function App() {
     setScrolled((prev) => (prev !== on ? on : prev));
   }, []);
 
-  function onSwipeDown(id, e) {
+  // Stable identities (empty deps — everything they touch is a ref or a
+  // setState function, both stable across renders) so passing them straight
+  // through to each EntryCard doesn't defeat its memoization.
+  const onSwipeDown = useCallback((id, e) => {
     dragStartX.current = e.clientX;
     dragged.current = false;
     const startDx = swipeRef.current.id === id ? swipeRef.current.dx : 0;
     commitSwipe(id, startDx, true);
-  }
+  }, []);
 
-  function onSwipeMove(id, e) {
+  const onSwipeMove = useCallback((id, e) => {
     const cur = swipeRef.current;
     if (!cur.dragging || cur.id !== id) return;
     if (Math.abs(e.clientX - dragStartX.current) > 6) dragged.current = true;
-    const base = cur.dx <= -REVEAL ? -REVEAL : 0;
+    // base on the latest known position, whether or not this frame's
+    // rAF has flushed it into swipeRef yet — otherwise a burst of
+    // pointermoves within one frame drifts off the real finger position.
+    const liveDx = pendingMove.current && pendingMove.current.id === id ? pendingMove.current.dx : cur.dx;
+    const base = liveDx <= -REVEAL ? -REVEAL : 0;
     const dx = Math.max(-REVEAL, Math.min(0, base + e.clientX - dragStartX.current));
-    commitSwipe(id, dx, true);
-  }
+    pendingMove.current = { id, dx };
+    if (!moveRaf.current) moveRaf.current = requestAnimationFrame(flushPendingMove);
+  }, []);
 
-  function onSwipeUp(id) {
+  const onSwipeUp = useCallback((id) => {
+    // a pointerup can land before the frame that would have flushed the
+    // last pointermove — apply it now so open/closed is decided from the
+    // real last position, not a stale one.
+    if (pendingMove.current && pendingMove.current.id === id) {
+      swipeRef.current = { ...swipeRef.current, dx: pendingMove.current.dx };
+    }
+    if (moveRaf.current) {
+      cancelAnimationFrame(moveRaf.current);
+      moveRaf.current = 0;
+    }
+    pendingMove.current = null;
     const cur = swipeRef.current;
     if (cur.id !== id) return;
     const open = cur.dx < -REVEAL / 2;
     commitSwipe(open ? id : null, open ? -REVEAL : 0, false);
-  }
+  }, []);
 
   const swipe = { openId: swipeOpenId, dx: swipeDx, dragging, onDown: onSwipeDown, onMove: onSwipeMove, onUp: onSwipeUp };
 
@@ -156,15 +190,18 @@ export default function App() {
     });
   }, []);
 
-  function onToggleText(id) {
-    if (dragged.current) return;
-    const cur = swipeRef.current;
-    if (cur.id === id && cur.dx <= -REVEAL / 2) {
-      commitSwipe(null, 0, false);
-      return;
-    }
-    toggleOpen(id);
-  }
+  const onToggleText = useCallback(
+    (id) => {
+      if (dragged.current) return;
+      const cur = swipeRef.current;
+      if (cur.id === id && cur.dx <= -REVEAL / 2) {
+        commitSwipe(null, 0, false);
+        return;
+      }
+      toggleOpen(id);
+    },
+    [toggleOpen],
+  );
 
   const onOpenDetailFromCard = useCallback((id) => {
     if (dragged.current) return;
