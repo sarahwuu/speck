@@ -139,7 +139,7 @@ export default function Capture({
         </div>
 
         <div style={{ padding: `0 24px ${SAFE_BOTTOM(48)}`, display: 'flex', justifyContent: 'flex-end', flex: 'none' }}>
-          <Button onClick={onSave} loading={saving} loadingLabel="saving…" style={{ height: 34 }}>
+          <Button onClick={onSave} disabled={!draft.trim() && !attached} loading={saving} loadingLabel="saving…" style={{ height: 34 }}>
             save
           </Button>
         </div>
