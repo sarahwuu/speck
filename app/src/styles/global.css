@@ -1,6 +1,16 @@
 /* Base rules — ported from tokens/base.css */
-html{font-size:16px;height:100%}
-body{margin:0;min-height:100%;background:var(--surface-page);color:var(--text-body);font-family:var(--font-sans);font-weight:var(--fw-medium);font-size:var(--text-body1-size);line-height:var(--text-body1-lh);-webkit-font-smoothing:antialiased;text-wrap:pretty;overscroll-behavior-y:none}
+/* html/body are pinned to exactly the viewport and never scroll or bounce
+   themselves — the app's own layout is a fixed-height shell (App.jsx) with
+   one internal scroll region (the feed list); nothing above that should
+   ever move. Without this, a page shorter than the viewport (few entries)
+   is still draggable in mobile Safari, and the fixed app bar rides along
+   with that drag since it's just riding the document, not actually fixed
+   to anything containing it. touch-action:manipulation drops the
+   double-tap-to-zoom gesture (and its ~300ms tap delay) while leaving
+   deliberate pinch-zoom alone. */
+html{font-size:16px;height:100%;overflow:hidden;touch-action:manipulation}
+body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--surface-page);color:var(--text-body);font-family:var(--font-sans);font-weight:var(--fw-medium);font-size:var(--text-body1-size);line-height:var(--text-body1-lh);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+#root{height:100%}
 a{color:var(--text-accent);text-decoration:none}
 a:hover{color:var(--ink);text-decoration:underline}
 a:active{color:var(--primary-800)}
