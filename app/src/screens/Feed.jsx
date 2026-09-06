@@ -79,26 +79,57 @@ export default function Feed({
           </button>
         </div>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            padding: '24px 12px 12px 24px',
-            flex: 'none',
-            background: 'var(--surface-page)',
-            borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
-            transition: 'border-color var(--motion-transition)',
-          }}
-        >
-          <span role="img" aria-label="speck" style={{ flex: 1, marginRight: 'auto', display: 'inline-flex', alignItems: 'center', gap: 11 }}>
-            <img src={logoMarkInk} alt="" style={{ width: 26, height: 26, display: 'block' }} />
-            <span style={{ font: '500 24px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--ink)' }}>speck</span>
-          </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 'none', marginLeft: 'auto' }}>
-            <IconButton name="search" label="search entries" onClick={onOpenSearch} />
-            <IconButton name="more" label="more options" onClick={onToggleAppMenu} />
+        <div style={{ position: 'relative', flex: 'none' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '24px 12px 12px 24px',
+              background: 'var(--surface-page)',
+              borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
+              transition: 'border-color var(--motion-transition)',
+            }}
+          >
+            <span role="img" aria-label="speck" style={{ flex: 1, marginRight: 'auto', display: 'inline-flex', alignItems: 'center', gap: 11 }}>
+              <img src={logoMarkInk} alt="" style={{ width: 26, height: 26, display: 'block' }} />
+              <span style={{ font: '500 24px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--ink)' }}>speck</span>
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 'none', marginLeft: 'auto' }}>
+              <IconButton name="search" label="search entries" onClick={onOpenSearch} />
+              <IconButton name="more" label="more options" onClick={onToggleAppMenu} />
+            </div>
           </div>
+
+          {appMenuOpen ? (
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 3,
+                // right:12 matches the header row's own right padding, so
+                // this lines up flush with the "more" button's own edge
+                // instead of a separately-guessed pixel offset that drifts
+                // out of sync whenever the header's own spacing changes.
+                top: '100%',
+                right: 12,
+                width: 200,
+                background: 'var(--surface-card)',
+                border: '1px solid var(--line)',
+                borderRadius: 8,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <button
+                type="button"
+                onClick={onEnterSelect}
+                style={{ height: 44, padding: '0 16px', textAlign: 'left', border: 'none', background: 'transparent', font: '500 16px/1 var(--font-sans)', color: 'var(--ink)', cursor: 'pointer' }}
+              >
+                select
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
 
@@ -140,34 +171,7 @@ export default function Feed({
         )}
       </div>
 
-      {appMenuOpen ? (
-        <>
-          <div onClick={onCloseAppMenu} style={{ position: 'absolute', inset: 0, zIndex: 2 }} />
-          <div
-            style={{
-              position: 'absolute',
-              zIndex: 3,
-              top: 96,
-              right: 16,
-              width: 200,
-              background: 'var(--surface-card)',
-              border: '1px solid var(--line)',
-              borderRadius: 8,
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <button
-              type="button"
-              onClick={onEnterSelect}
-              style={{ height: 44, padding: '0 16px', textAlign: 'left', border: 'none', background: 'transparent', font: '500 16px/1 var(--font-sans)', color: 'var(--ink)', cursor: 'pointer' }}
-            >
-              select
-            </button>
-          </div>
-        </>
-      ) : null}
+      {appMenuOpen ? <div onClick={onCloseAppMenu} style={{ position: 'absolute', inset: 0, zIndex: 2 }} /> : null}
 
       {confirm && confirm.frame === 'feed' ? (
         <ConfirmDialog title={confirmTitle} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />

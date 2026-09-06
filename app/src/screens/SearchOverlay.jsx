@@ -2,6 +2,7 @@ import IconButton from '../ds/IconButton.jsx';
 import SearchField from '../ds/SearchField.jsx';
 import EmptyState from '../ds/EmptyState.jsx';
 import { RESULT_BLOB } from '../lib/blobs.js';
+import { SAFE_TOP } from '../lib/safeArea.js';
 
 const ROW1 = 'qwertyuiop'.split('');
 const ROW2 = 'asdfghjkl'.split('');
@@ -46,7 +47,9 @@ export default function SearchOverlay({ closing, query, onQuery, onBack, results
     <>
       <div
         onClick={onBack}
-        style={{ position: 'absolute', inset: 0, background: 'var(--ink-16)', animation: closing ? 'speck-scrim-out 220ms ease-out both' : 'speck-scrim-in 200ms ease-out both' }}
+        // 10 points darker than the design system's --ink-16 (16% ->
+        // 26% opacity, same base ink color) — this overlay's scrim only.
+        style={{ position: 'absolute', inset: 0, background: 'oklch(0.22 0.01 90 / 0.26)', animation: closing ? 'speck-scrim-out 220ms ease-out both' : 'speck-scrim-in 200ms ease-out both' }}
       />
       <div style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', pointerEvents: 'none' }}>
         <div
@@ -54,7 +57,10 @@ export default function SearchOverlay({ closing, query, onQuery, onBack, results
             pointerEvents: 'auto',
             background: 'var(--surface-page)',
             borderBottom: '1px solid var(--line)',
-            padding: '68px 24px 12px 12px',
+            // Matches the app bar's own paddingTop (env(safe-area-inset-top))
+            // plus its 24px content padding, so the search bar lands exactly
+            // where the app bar sits instead of appearing lower.
+            padding: `calc(${SAFE_TOP} + 24px) 24px 12px 12px`,
             display: 'flex',
             alignItems: 'center',
             gap: 4,

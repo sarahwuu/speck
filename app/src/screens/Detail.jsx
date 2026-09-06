@@ -11,28 +11,25 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
   if (!entry) return null;
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', paddingTop: SAFE_TOP }}>
-      <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 4, padding: '0 12px', flex: 'none' }}>
-        <IconButton name="back" label="back to feed" onClick={onBack} />
-        <div style={{ flex: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
-          <span style={{ width: 8, height: 8, flex: 'none', borderRadius: DETAIL_BLOB, transform: 'rotate(12deg)', background: 'var(--tint-screenshot)' }} />
-          <span style={{ font: '500 13px/1.45 var(--font-sans)', color: 'var(--muted)' }}>{entry.timestamp}</span>
+      <div style={{ position: 'relative', flex: 'none' }}>
+        <div style={{ height: 56, display: 'flex', alignItems: 'center', gap: 4, padding: '0 12px' }}>
+          <IconButton name="back" label="back to feed" onClick={onBack} />
+          <div style={{ flex: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+            <span style={{ width: 8, height: 8, flex: 'none', borderRadius: DETAIL_BLOB, transform: 'rotate(12deg)', background: 'var(--tint-screenshot)' }} />
+            <span style={{ font: '500 13px/1.45 var(--font-sans)', color: 'var(--muted)' }}>{entry.timestamp}</span>
+          </div>
+          <IconButton name="more" label="entry options" onClick={onToggleShotMenu} />
         </div>
-        <IconButton name="more" label="entry options" onClick={onToggleShotMenu} />
-      </div>
 
-      <div style={{ flex: 1, padding: '8px 24px 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)' }}>{entry.text}</p> : null}
-        <EntryImage src={entry.image} maxHeight="45vh" />
-      </div>
-
-      {shotMenu ? (
-        <>
-          <div onClick={onCloseMenus} style={{ position: 'absolute', inset: 0, background: 'var(--ink-16)' }} />
+        {shotMenu ? (
           <div
             style={{
               position: 'absolute',
-              top: 96,
-              right: 16,
+              zIndex: 3,
+              // right:12 matches the header row's own right padding, same
+              // reasoning as the feed's "⋯" menu.
+              top: '100%',
+              right: 12,
               width: 180,
               background: 'var(--surface-card)',
               border: '1px solid var(--line)',
@@ -57,8 +54,15 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
               delete
             </button>
           </div>
-        </>
-      ) : null}
+        ) : null}
+      </div>
+
+      <div style={{ flex: 1, padding: '8px 24px 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)' }}>{entry.text}</p> : null}
+        <EntryImage src={entry.image} maxHeight="45vh" />
+      </div>
+
+      {shotMenu ? <div onClick={onCloseMenus} style={{ position: 'absolute', inset: 0, background: 'var(--ink-16)' }} /> : null}
 
       {confirm && confirm.frame === 'shot' ? <ConfirmDialog title="delete this entry?" onCancel={onCancelDelete} onConfirm={onConfirmDelete} /> : null}
     </div>
