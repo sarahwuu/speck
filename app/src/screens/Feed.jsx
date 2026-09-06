@@ -23,9 +23,6 @@ export default function Feed({
   onToggleSelect,
   onExitSelect,
   onRequestDeleteSelected,
-  appMenuOpen,
-  onToggleAppMenu,
-  onCloseAppMenu,
   onEnterSelect,
   swipe,
   hintId,
@@ -79,64 +76,26 @@ export default function Feed({
           </button>
         </div>
       ) : (
-        <div style={{ position: 'relative', flex: 'none' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              padding: '24px 12px 12px 24px',
-              background: 'var(--surface-page)',
-              borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
-              transition: 'border-color var(--motion-transition)',
-            }}
-          >
-            <span role="img" aria-label="speck" style={{ flex: 1, marginRight: 'auto', display: 'inline-flex', alignItems: 'center', gap: 11 }}>
-              <img src={logoMarkInk} alt="" style={{ width: 26, height: 26, display: 'block' }} />
-              <span style={{ font: '500 24px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--ink)' }}>speck</span>
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 'none', marginLeft: 'auto' }}>
-              <IconButton name="search" label="search entries" onClick={onOpenSearch} />
-              <IconButton name="more" label="more options" onClick={onToggleAppMenu} />
-            </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: '24px 12px 12px 24px',
+            flex: 'none',
+            background: 'var(--surface-page)',
+            borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
+            transition: 'border-color var(--motion-transition)',
+          }}
+        >
+          <span role="img" aria-label="speck" style={{ flex: 1, marginRight: 'auto', display: 'inline-flex', alignItems: 'center', gap: 11 }}>
+            <img src={logoMarkInk} alt="" style={{ width: 26, height: 26, display: 'block' }} />
+            <span style={{ font: '500 24px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--ink)' }}>speck</span>
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 'none', marginLeft: 'auto' }}>
+            <IconButton name="search" label="search entries" onClick={onOpenSearch} />
+            <IconButton name="check-circle" label="select entries" onClick={onEnterSelect} />
           </div>
-
-          {appMenuOpen ? (
-            <div
-              style={{
-                position: 'absolute',
-                zIndex: 3,
-                // right:12 matches the header row's own right padding, so
-                // this lines up flush with the "more" button's own edge
-                // instead of a separately-guessed pixel offset that drifts
-                // out of sync whenever the header's own spacing changes.
-                // left:24 (the screen's own side margin) instead of a fixed
-                // width, so it reads as a wide sheet dropping from the
-                // header rather than a small corner box.
-                top: '100%',
-                left: 24,
-                right: 12,
-                background: 'var(--surface-card)',
-                // The system has no shadows (flat design, elevation via a
-                // line only) — border-strong instead of the usual hairline
-                // border-default gives this floating sheet enough contrast
-                // to read as separate from the page without breaking that.
-                border: '1px solid var(--border-strong)',
-                borderRadius: 8,
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <button
-                type="button"
-                onClick={onEnterSelect}
-                style={{ height: 44, padding: '0 16px', textAlign: 'left', border: 'none', background: 'transparent', font: '500 16px/1 var(--font-sans)', color: 'var(--ink)', cursor: 'pointer' }}
-              >
-                select
-              </button>
-            </div>
-          ) : null}
         </div>
       )}
 
@@ -177,8 +136,6 @@ export default function Feed({
           })
         )}
       </div>
-
-      {appMenuOpen ? <div onClick={onCloseAppMenu} style={{ position: 'absolute', inset: 0, zIndex: 2 }} /> : null}
 
       {confirm && confirm.frame === 'feed' ? (
         <ConfirmDialog title={confirmTitle} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />

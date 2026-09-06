@@ -42,10 +42,9 @@ export default function App() {
   const [detailId, setDetailId] = useState(null);
   const [shotMenu, setShotMenu] = useState(false);
 
-  // ---- feed: selection, app menu, confirm dialog ------------------------
+  // ---- feed: selection, confirm dialog ------------------------------------
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState(() => new Set());
-  const [appMenuOpen, setAppMenuOpen] = useState(false);
   const [confirm, setConfirm] = useState(null); // {frame:'feed'|'shot', id} | {frame:'feed', ids}
   const [scrolled, setScrolled] = useState(false);
 
@@ -249,7 +248,6 @@ export default function App() {
   }, [deleteEntry, deleteMany]);
 
   const onEnterSelect = useCallback(() => {
-    setAppMenuOpen(false);
     setSelecting(true);
     setSelected(new Set());
     commitSwipe(null, 0, false);
@@ -382,9 +380,6 @@ export default function App() {
             onToggleSelect={onToggleSelect}
             onExitSelect={onExitSelect}
             onRequestDeleteSelected={onRequestDeleteSelected}
-            appMenuOpen={appMenuOpen}
-            onToggleAppMenu={() => setAppMenuOpen((v) => !v)}
-            onCloseAppMenu={() => setAppMenuOpen(false)}
             onEnterSelect={onEnterSelect}
             swipe={swipe}
             hintId={hintId}
