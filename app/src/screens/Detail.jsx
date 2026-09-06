@@ -27,12 +27,18 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
               position: 'absolute',
               zIndex: 3,
               // right:12 matches the header row's own right padding, same
-              // reasoning as the feed's "⋯" menu.
+              // reasoning as the feed's "⋯" menu. left:24 (the screen's own
+              // side margin) instead of a fixed width, so it reads as a
+              // wide sheet rather than a small corner box.
               top: '100%',
+              left: 24,
               right: 12,
-              width: 180,
               background: 'var(--surface-card)',
-              border: '1px solid var(--line)',
+              // The system has no shadows (flat design, elevation via a
+              // line only) — border-strong instead of the usual hairline
+              // border-default gives this floating sheet enough contrast
+              // to read as separate from the page without breaking that.
+              border: '1px solid var(--border-strong)',
               borderRadius: 8,
               overflow: 'hidden',
               display: 'flex',

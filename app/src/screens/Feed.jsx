@@ -110,11 +110,18 @@ export default function Feed({
                 // this lines up flush with the "more" button's own edge
                 // instead of a separately-guessed pixel offset that drifts
                 // out of sync whenever the header's own spacing changes.
+                // left:24 (the screen's own side margin) instead of a fixed
+                // width, so it reads as a wide sheet dropping from the
+                // header rather than a small corner box.
                 top: '100%',
+                left: 24,
                 right: 12,
-                width: 200,
                 background: 'var(--surface-card)',
-                border: '1px solid var(--line)',
+                // The system has no shadows (flat design, elevation via a
+                // line only) — border-strong instead of the usual hairline
+                // border-default gives this floating sheet enough contrast
+                // to read as separate from the page without breaking that.
+                border: '1px solid var(--border-strong)',
                 borderRadius: 8,
                 overflow: 'hidden',
                 display: 'flex',
