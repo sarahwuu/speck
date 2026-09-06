@@ -92,9 +92,9 @@ export default function Feed({
             <img src={logoMarkInk} alt="" style={{ width: 26, height: 26, display: 'block' }} />
             <span style={{ font: '500 24px/1 var(--font-sans)', letterSpacing: '-0.01em', color: 'var(--ink)' }}>speck</span>
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 'none', marginLeft: 'auto' }}>
-            <IconButton name="search" label="search entries" onClick={onOpenSearch} />
-            <IconButton name="check-circle" label="select entries" onClick={onEnterSelect} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, flex: 'none', marginLeft: 'auto' }}>
+            <IconButton name="search" label="search entries" iconSize={22} onClick={onOpenSearch} />
+            <IconButton name="check-circle" label="select entries" iconSize={22} onClick={onEnterSelect} />
           </div>
         </div>
       )}

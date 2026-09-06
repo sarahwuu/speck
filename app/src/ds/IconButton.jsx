@@ -2,9 +2,9 @@ import { useState } from 'react';
 import Icon from './Icon.jsx';
 
 // Ported from _ds/.../components/actions/IconButton.jsx
-// 44px tap target, 20px glyph, transparent by default. Every one carries an
-// aria-label.
-export default function IconButton({ name, label, disabled = false, onClick, size = 44, style, ...rest }) {
+// 44px tap target, 20px glyph by default (override via iconSize), transparent
+// by default. Every one carries an aria-label.
+export default function IconButton({ name, label, disabled = false, onClick, size = 44, iconSize = 20, style, ...rest }) {
   const [pressed, setPressed] = useState(false);
   return (
     <button
@@ -33,7 +33,7 @@ export default function IconButton({ name, label, disabled = false, onClick, siz
       }}
       {...rest}
     >
-      <Icon name={name} size={20} />
+      <Icon name={name} size={iconSize} />
     </button>
   );
 }
