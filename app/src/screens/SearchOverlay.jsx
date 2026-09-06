@@ -51,7 +51,27 @@ export default function SearchOverlay({ closing, query, onQuery, onBack, results
         // 26% opacity, same base ink color) — this overlay's scrim only.
         style={{ position: 'absolute', inset: 0, background: 'oklch(0.22 0.01 90 / 0.26)', animation: closing ? 'speck-scrim-out 220ms ease-out both' : 'speck-scrim-in 200ms ease-out both' }}
       />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', pointerEvents: 'none' }}>
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          pointerEvents: 'none',
+          // The bar and keyboard already have their own slide/scale exit
+          // motion below, but the results list and the dimmed-feed gap
+          // between them had no exit animation of their own at all — they
+          // just sat frozen while everything around them moved, then cut
+          // out abruptly the instant the 220ms unmount timer fired. Fading
+          // the whole group together covers those pieces too, so the
+          // dismissal reads as one motion instead of some parts animating
+          // and one part popping.
+          animation: closing ? 'speck-scrim-out 220ms ease-out both' : 'none',
+        }}
+      >
         <div
           style={{
             pointerEvents: 'auto',
@@ -65,7 +85,11 @@ export default function SearchOverlay({ closing, query, onQuery, onBack, results
             alignItems: 'center',
             gap: 4,
             flex: 'none',
-            animation: closing ? 'speck-bar-out 200ms ease-out both' : 'speck-bar-in 220ms cubic-bezier(0.2,0.8,0.2,1) both',
+            // 220ms matches every other exit animation here and the JS
+            // unmount timer in App.jsx — everything finishes at the same
+            // instant instead of some pieces sitting idle for the last
+            // 20ms before the whole overlay cuts out.
+            animation: closing ? 'speck-bar-out 220ms ease-out both' : 'speck-bar-in 220ms cubic-bezier(0.2,0.8,0.2,1) both',
           }}
         >
           <IconButton name="back" label="close search" onClick={onBack} />
@@ -73,7 +97,7 @@ export default function SearchOverlay({ closing, query, onQuery, onBack, results
             value={query}
             onChange={onQuery}
             autoFocus
-            style={{ flex: 1, animation: closing ? 'speck-field-out 200ms ease-out both' : 'speck-field-in 260ms cubic-bezier(0.2,0.8,0.2,1) both' }}
+            style={{ flex: 1, animation: closing ? 'speck-field-out 220ms ease-out both' : 'speck-field-in 260ms cubic-bezier(0.2,0.8,0.2,1) both' }}
           />
         </div>
 
