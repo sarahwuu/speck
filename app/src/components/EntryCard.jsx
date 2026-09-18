@@ -233,16 +233,17 @@ function EntryCard({
                 onClick={() => onToggleText(id)}
                 style={{
                   margin: 0,
+                  width: '100%',
                   font: '500 16px/1.55 var(--font-sans)',
                   color: 'var(--ink)',
                   cursor: 'text',
                   whiteSpace: 'pre-wrap',
-                  // -webkit-box is only what -webkit-line-clamp needs to
-                  // truncate at 3 lines — but that box model shrinks to
-                  // fit its content's width rather than filling the
-                  // card, so once expanded ("show more") it needs to
-                  // drop back to a plain block or the text visibly
-                  // narrows instead of using the full card width.
+                  // -webkit-box (only what -webkit-line-clamp needs to
+                  // truncate at 3 lines) shrinks to fit its content's
+                  // width instead of filling the card — width:100% above
+                  // pins it to the card either way, so collapsed and
+                  // expanded read at the same width instead of one
+                  // narrowing relative to the other.
                   ...(entry.open
                     ? null
                     : { display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', WebkitLineClamp: 3 }),
