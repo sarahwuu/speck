@@ -237,10 +237,15 @@ function EntryCard({
                   color: 'var(--ink)',
                   cursor: 'text',
                   whiteSpace: 'pre-wrap',
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  WebkitLineClamp: entry.open ? 'unset' : 3,
+                  // -webkit-box is only what -webkit-line-clamp needs to
+                  // truncate at 3 lines — but that box model shrinks to
+                  // fit its content's width rather than filling the
+                  // card, so once expanded ("show more") it needs to
+                  // drop back to a plain block or the text visibly
+                  // narrows instead of using the full card width.
+                  ...(entry.open
+                    ? null
+                    : { display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', WebkitLineClamp: 3 }),
                 }}
               >
                 {entry.text}

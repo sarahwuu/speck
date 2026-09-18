@@ -141,7 +141,7 @@ export default function Feed({
         <ConfirmDialog title={confirmTitle} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
       ) : null}
 
-      <QuickCaptureButton fixed={false} onClick={onOpenCapture} label="new entry" style={{ position: 'absolute', right: 24, bottom: SAFE_BOTTOM(48) }} />
+      <QuickCaptureButton fixed={false} onClick={onOpenCapture} label="new entry" style={{ position: 'absolute', right: 24, bottom: SAFE_BOTTOM(28) }} />
     </div>
   );
 }
