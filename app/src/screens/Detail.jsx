@@ -64,7 +64,7 @@ export default function Detail({ entry, onBack, shotMenu, onToggleShotMenu, onCl
       </div>
 
       <div style={{ flex: 1, padding: '8px 24px 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)' }}>{entry.text}</p> : null}
+        {entry.text ? <p style={{ margin: 0, font: '500 16px/1.55 var(--font-sans)', color: 'var(--ink)', whiteSpace: 'pre-wrap' }}>{entry.text}</p> : null}
         <EntryImage src={entry.image} maxHeight="45vh" />
       </div>
 

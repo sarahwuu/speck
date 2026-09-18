@@ -1,10 +1,60 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import IconButton from '../ds/IconButton.jsx';
 import Button from '../ds/Button.jsx';
 import Toast from '../ds/Toast.jsx';
 import { SAFE_BOTTOM, SAFE_TOP } from '../lib/safeArea.js';
 import { fileToDataUrl } from '../lib/image.js';
 import EntryImage from '../components/EntryImage.jsx';
+
+const MIN_TEXTAREA_ROWS = 8;
+// Clearance reserved below the last line so the attach-photo icon (pinned
+// to the bottom-right of the textarea's own box) never sits flush against
+// it — the fixed row count used to leave this gap for free on any note
+// under 8 lines; auto-growing to the exact content height would otherwise
+// lose it for longer notes.
+const ICON_GUTTER = 56;
+
+function lineStartBefore(value, cursor) {
+  return value.lastIndexOf('\n', cursor - 1) + 1;
+}
+
+/** Turns "* " at the start of a line into a real bullet as you type it.
+ * "- " is left as a literal hyphen — it already reads as a dash bullet on
+ * its own — but both are tracked as list markers so Enter can continue
+ * them onto the next line. */
+function autoBullet(value, cursor) {
+  const lineStart = lineStartBefore(value, cursor);
+  if (value.slice(lineStart, cursor) === '* ') {
+    return { value: value.slice(0, lineStart) + '• ' + value.slice(cursor), cursor: lineStart + 2 };
+  }
+  return null;
+}
+
+/** Continues a "• " or "- " list onto the next line on Enter, the way
+ * most note apps do — and lets a second Enter on an empty bullet line
+ * close the list instead of adding yet another empty marker. Only
+ * engages when Enter is pressed at the end of a bulleted line with no
+ * selection, so it never fights with normal editing elsewhere. */
+function continueBulletOnEnter(el) {
+  const { value } = el;
+  if (el.selectionStart !== el.selectionEnd) return null;
+  const cursor = el.selectionStart;
+  const lineStart = lineStartBefore(value, cursor);
+  const nextNewline = value.indexOf('\n', cursor);
+  const lineEnd = nextNewline === -1 ? value.length : nextNewline;
+  if (cursor !== lineEnd) return null; // only at end-of-line, not mid-line
+
+  const match = value.slice(lineStart, lineEnd).match(/^([•-]) (.*)$/);
+  if (!match) return null;
+  const [, marker, rest] = match;
+
+  if (rest.trim() === '') {
+    // an empty bullet — Enter again means "done with the list"
+    return { value: value.slice(0, lineStart) + value.slice(cursor), cursor: lineStart };
+  }
+  const insertion = `\n${marker} `;
+  return { value: value.slice(0, cursor) + insertion + value.slice(cursor), cursor: cursor + insertion.length };
+}
 
 /** The capture sheet: one open textarea, one attach-image icon, one save
  * action. Rises from the bottom as a true top layer over the still-mounted
@@ -23,7 +73,51 @@ export default function Capture({
   onClose,
 }) {
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
   const [loadingPhoto, setLoadingPhoto] = useState(false);
+
+  // Auto-grow with the content instead of scrolling inside a fixed-height
+  // box — a fixed row count meant a longer note just got cramped into a
+  // small scrollable window instead of the sheet's own scroll handling it.
+  useLayoutEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight + ICON_GUTTER}px`;
+  }, [draft]);
+
+  // Both handlers below write the transformed value and cursor position
+  // straight to the DOM node before telling React about it, rather than
+  // fixing the cursor up a frame later. A controlled textarea normally
+  // snaps the cursor to the end of the value on every re-render; a
+  // requestAnimationFrame callback to restore it loses the race against
+  // fast typing (the next keystroke can land before the frame fires,
+  // landing at the wrong position and scrambling the text). Setting the
+  // DOM value/selection synchronously first means the subsequent React
+  // re-render is just reassigning the same string, which browsers don't
+  // treat as a reason to move the caret.
+  function handleDraftChange(e) {
+    const el = e.target;
+    const bulleted = autoBullet(el.value, el.selectionStart);
+    if (!bulleted) {
+      onDraftChange(el.value);
+      return;
+    }
+    el.value = bulleted.value;
+    el.selectionStart = el.selectionEnd = bulleted.cursor;
+    onDraftChange(bulleted.value);
+  }
+
+  function handleKeyDown(e) {
+    if (e.key !== 'Enter') return;
+    const el = e.target;
+    const result = continueBulletOnEnter(el);
+    if (!result) return;
+    e.preventDefault();
+    el.value = result.value;
+    el.selectionStart = el.selectionEnd = result.cursor;
+    onDraftChange(result.value);
+  }
 
   async function onFileChange(e) {
     const file = e.target.files && e.target.files[0];
@@ -73,15 +167,18 @@ export default function Capture({
         <div style={{ flex: 1, padding: '8px 24px 0', display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
           <div style={{ position: 'relative' }}>
             <textarea
+              ref={textareaRef}
               value={draft}
-              onChange={(e) => onDraftChange(e.target.value)}
-              rows={8}
+              onChange={handleDraftChange}
+              onKeyDown={handleKeyDown}
               placeholder="type, paste, or add a screenshot…"
               style={{
                 width: '100%',
+                minHeight: MIN_TEXTAREA_ROWS * 16 * 1.55,
                 boxSizing: 'border-box',
                 display: 'block',
                 resize: 'none',
+                overflow: 'hidden',
                 border: 'none',
                 outline: 'none',
                 padding: 0,
