@@ -236,6 +236,7 @@ function EntryCard({
                   font: '500 16px/1.55 var(--font-sans)',
                   color: 'var(--ink)',
                   cursor: 'text',
+                  whiteSpace: 'pre-wrap',
                   display: '-webkit-box',
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
