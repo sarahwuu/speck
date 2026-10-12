@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { useEntries } from './hooks/useEntries.js';
 import { useSwipeHint } from './hooks/useSwipeHint.js';
 import { REVEAL, rubberClamp } from './lib/swipe.js';
@@ -441,6 +442,7 @@ export default function App() {
 
         {splashPhase !== 'done' ? <Splash fadingOut={splashPhase === 'out'} /> : null}
       </div>
+      <Analytics />
     </div>
   );
 }
